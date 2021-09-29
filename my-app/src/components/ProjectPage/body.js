@@ -1,6 +1,8 @@
 import React from 'react';
 import './temp.css'
 import { Button } from 'semantic-ui-react'
+import AddProject from './addProject'
+import Cookies from 'js-cookie';
 
 class Project extends React.Component {
     constructor(props){
@@ -18,7 +20,7 @@ class Project extends React.Component {
     fetchTasks(){
         console.log('Fetching...')
     
-        fetch('http://127.0.0.1:8000/keepTrack/project/')
+        fetch('http://127.0.0.1:3000/keepTrack/project/',{headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
         .then(response => response.json())
         .then(data => 
             this.setState({
@@ -42,11 +44,12 @@ class Project extends React.Component {
                     })}
                     <Button>Click me</Button>
                 </div>
+                <AddProject/>
             </div>
+            
         )
     }
 }
-
 
 export default Project;
 

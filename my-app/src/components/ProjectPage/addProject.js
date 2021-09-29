@@ -7,6 +7,9 @@ import axios from "axios";
 import JoditEditor from "jodit-react";
 import dateFormat from 'dateformat';
 import Datetime from 'react-datetime';
+import Cookies from 'js-cookie';
+import { Redirect } from 'react-router-dom';
+import Popup from 'reactjs-popup';
 
 const AddProject = () => {
     const [projectInfo, setProjectInfo] = React.useState({
@@ -23,7 +26,7 @@ const AddProject = () => {
     const [project_admins, setProject_admins] = React.useState([]);
     const [wiki, setWiki] = React.useState("");
     const [users, setUsers] = React.useState([]);
-    
+    var done = false;
     // const editor = useRef(null)
     // const config = {
 	// 	readonly: false // all options from https://xdsoft.net/jodit/doc/
@@ -64,7 +67,7 @@ const AddProject = () => {
     
     async function fetchUserList() {
         axios
-            .get('http://127.0.0.1:8000/keepTrack/user/')
+            .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 setUsers(response.data)
             })
@@ -83,8 +86,8 @@ const AddProject = () => {
         text : user.username
     }))
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
+    const handleFormSubmit = () => {
+        done = true
         const data = new FormData();
         data.append("project_name", projectInfo.project_name);
         data.append("start_date", "2021-09-04T10:18:00Z");
@@ -95,8 +98,8 @@ const AddProject = () => {
         data.append("project_admins",project_admins);
 
         axios
-            .post("http://127.0.0.1:8000/keepTrack/project/",data, {
-                headers: { "Content-Type": "multipart/form-data" },
+            .post("http://localhost:3000/keepTrack/project/",data, {
+                headers: { "Content-Type": "multipart/form-data", "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
                 params: {withCredentials : true}
             })
             .then((response)=>{
@@ -106,97 +109,111 @@ const AddProject = () => {
                 console.log("hemlo")
                 console.log(err);
             });
+        
+        
     }
 
-                // headers: { "Content-Type": "application/json" },
-                // body : JSON.stringify({
-                //     "project_name": projectInfo.project_name,
-                //     "start_date": start_date,
-                //     "due_date": due_date,
-                //     "wiki": wiki,
-                //     "is_completed": is_completed,
-                //     "members_p": members_p,
-                //     "project_admins": project_admins
-                // })
-
     return(
-        <Form onSubmit={handleFormSubmit}>
-            
-            <Form.Input 
-                placeholder='Project Name' 
-                width={16}
-                name='project_name'
-                value={projectInfo.project_name}
-                onChange={handleInfoChange} />
+ 
+        <div>
+        <Popup
+            trigger={<button className="button"> Open Modal </button>}
+            modal
+            className="temp"
+            nested
+        >
+            {close => (
+            <div className="temp"> 
+                <button onClick={close}>
+                &times;
+                </button>
+               
+                <Form >
+                    <Form.Input 
+                        placeholder='Project Name' 
+                        width={16}
+                        name='project_name'
+                        value={projectInfo.project_name}
+                        onChange={handleInfoChange} />
 
-            <Form.Group widths='equal'>
+                    <Form.Group widths='equal'>
 
-                {/* <DateTimeInput 
-                placeholder='Start Date'
-                name='start_date'
-                width={8}
-                value={start_date}
-                onChange={handleSDateChange} /> */}
-                
-                <Datetime
-                placeholder='Start Date'
-                name='start_date'
-                value = {start_date}
-                width={8}
-                timeFormat = {true}
-                onChange={handleSDateChange}
-                 />
+                        {/* <DateTimeInput 
+                        placeholder='Start Date'
+                        name='start_date'
+                        width={8}
+                        value={start_date}
+                        onChange={handleSDateChange} /> */}
+                        
+                        <Datetime
+                        placeholder='Start Date'
+                        name='start_date'
+                        value = {start_date}
+                        width={8}
+                        timeFormat = {true}
+                        onChange={handleSDateChange}
+                        />
 
-                <DateTimeInput 
-                placeholder='Due/End Date'
-                name='due_date'
-                width={8}
-                value={due_date}
-                onChange={handleDDateChange} />
+                        <DateTimeInput 
+                        placeholder='Due/End Date'
+                        name='due_date'
+                        width={8}
+                        value={due_date}
+                        onChange={handleDDateChange} />
 
-            </Form.Group>
+                    </Form.Group>
 
-            <TextArea 
-            placeholder='Wiki' 
-            style={{ minHeight: 100 }}
-            onChange= {newWiki => setWiki(newWiki)}
-            />
-            {/* <JoditEditor
-            	ref={editor}
-                value={wiki}
-                config={config}
-                tabIndex={1} // tabIndex of textarea
-                onBlur={newWiki => setWiki(newWiki)} // preferred to use only this option to update the content for performance reasons
-                onChange={newWiki => {}}
-            /> */}
+                    <TextArea 
+                    placeholder='Wiki' 
+                    style={{ minHeight: 100 }}
+                    onChange= {newWiki => setWiki(newWiki)}
+                    />
+                    {/* <JoditEditor
+                        ref={editor}
+                        value={wiki}
+                        config={config}
+                        tabIndex={1} // tabIndex of textarea
+                        onBlur={newWiki => setWiki(newWiki)} // preferred to use only this option to update the content for performance reasons
+                        onChange={newWiki => {}}
+                    /> */}
 
-            <br></br>
-            <br></br>
-            <Form.Field
-            control={Checkbox}
-            width={1}
-            label='Complete?'
-            onChange={handleStatusChange}
-            />
-            
-            <Select
-                placeholder='Members'
-                isMulti
-                isSearchable
-                options={members}
-                onChange={handleMembersChange}
-            ></Select>
-            <br></br>
-            <Select
-                placeholder='Project Admins'
-                isMulti
-                isSearchable
-                options={members}
-                onChange={handleProjAdminsChange}
-            ></Select>
-            <br></br>
-            <Button type='submit'>Add Project</Button>
-        </Form>
+                    <br></br>
+                    <br></br>
+                    <Form.Field
+                    control={Checkbox}
+                    width={1}
+                    label='Complete?'
+                    onChange={handleStatusChange}
+                    />
+                    
+                    <Select
+                        placeholder='Members'
+                        isMulti
+                        isSearchable
+                        options={members}
+                        onChange={handleMembersChange}
+                    ></Select>
+                    <br></br>
+                    <Select
+                        placeholder='Project Admins'
+                        isMulti
+                        isSearchable
+                        options={members}
+                        onChange={handleProjAdminsChange}
+                    ></Select>
+                    <br></br>
+                    <Button 
+                        type='button'
+                        onClick={() => {
+                        console.log('modal closed ');
+                        handleFormSubmit()
+                        close();
+                        }}>Add Project</Button>
+                </Form>
+            </div>
+            )}
+        </Popup>
+        </div>
     );
     
 }

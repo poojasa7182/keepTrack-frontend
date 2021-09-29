@@ -34,6 +34,7 @@ class Login extends React.Component{
         //             .catch((err) => {console.log(err);});
                         
         // console.log(user1)
+        //var csrftoken = getCookie('csrftoken');
         axios
             .get("http://127.0.0.1:8000/keepTrack/user/login", {
                 params: {code:auth, withCredentials : true}

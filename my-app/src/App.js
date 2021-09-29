@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import Home from './components/Login/home';
 import Login from './components/Login/login';
-import Project from './components/ProjectPage/body';
+import Project from './components/ProjectPage/projects';
 import Info from './components/DashboardPage/Info';
 import AddProject from './components/ProjectPage/addProject';
 import {Route} from 'react-router-dom';
