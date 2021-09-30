@@ -108,16 +108,16 @@ const AddProject = () => {
             .catch((err) => {
                 console.log("hemlo")
                 console.log(err);
+                
             });
         
         
     }
 
     return(
- 
         <div>
         <Popup
-            trigger={<button className="button"> Open Modal </button>}
+            trigger={<button className="button"> Add Project </button>}
             modal
             className="temp"
             nested
