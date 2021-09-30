@@ -11,9 +11,12 @@ import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import AddProject from './addProject'
+import EditProject from './editProject'
+
 const Project = () => {
     
     const [projects, setProjects] = React.useState([]);
+    const [editList, setEditList] = React.useState();
 
     async function fetchProjectList() {
         axios
@@ -42,8 +45,13 @@ const Project = () => {
                 console.log("hemlo")
                 console.log(err);
             });
-    }
-   
+    };
+
+    function handleEditEvent(id) {
+        console.log(id)
+        setEditList(<EditProject projectId = {id} />);
+    };
+
     return(
  
         <div>
@@ -53,8 +61,10 @@ const Project = () => {
                         <div key={project.id}>
                             {project.id},
                             {project.project_name}
+                            &nbsp;&nbsp;
                             <button type="button" onClick={() => handleDeleteEvent(project.id)}>Delete</button>
-                            <button type="button">Edit Project Details</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="button" onClick={() => handleEditEvent(project.id)}>Edit</button>
                         </div>
                         
                     )
@@ -62,6 +72,7 @@ const Project = () => {
                 <Button>Click me</Button>
             </div>
             <AddProject onChange={fetchProjectList()}/>
+            {editList}
         </div>
     );
     
