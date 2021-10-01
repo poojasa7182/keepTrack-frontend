@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
-const AddProject = () => {
+const AddProject = (props) => {
     const [projectInfo, setProjectInfo] = React.useState({
         project_name: "",
     });
@@ -58,11 +58,18 @@ const AddProject = () => {
     const handleDDateChange = (event, data) => setDue_date(data.value);
 
     var handleMembersChange = (e) => {
-        setMembers_p(Array.isArray(e)?e.map(x => x.key):["n"]);
+        var temp = [];
+        for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
+        setMembers_p(temp)
+        // console.log(members_p.type)
+        // console.log(members_p)
     }
 
     const handleProjAdminsChange = (e) => {
-        setProject_admins(Array.isArray(e)?e.map(x => x.key):["n"]);
+        var temp = [];
+        for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
+        setProject_admins(temp)
+        //setProject_admins(e.key)
     }
     
     async function fetchUserList() {
@@ -71,7 +78,6 @@ const AddProject = () => {
             .then((response) => {
                 setUsers(response.data)
             })
-            
             .catch((error) => console.log(error));
     }
 
@@ -83,27 +89,37 @@ const AddProject = () => {
         key : user.id,
         value : user.id,
         label : user.username,
-        text : user.username
+        text : user.username,
     }))
 
     const handleFormSubmit = () => {
         done = true
-        const data = new FormData();
-        data.append("project_name", projectInfo.project_name);
-        data.append("start_date", "2021-09-04T10:18:00Z");
-        data.append("due_date","2021-09-04T10:18:00Z");
-        data.append("wiki",wiki);
-        data.append("is_completed",is_completed);
-        data.append("members_p",members_p);
-        data.append("project_admins",project_admins);
-
+        // console.log(members_p)
+        // const data = new FormData();
+        // data.append("project_name", projectInfo.project_name);
+        // data.append("start_date", "2021-09-04T10:18:00Z");
+        // data.append("due_date","2021-09-04T10:18:00Z");
+        // data.append("wiki",wiki);
+        // data.append("is_completed",is_completed);
+        // data.append("members_p",members_p);
+        // data.append("project_admins",project_admins);
+        const data = {
+            project_name : projectInfo.project_name,
+            start_date : "2021-09-04T10:18:00Z",
+            due_date : "2021-09-04T10:18:00Z",
+            wiki : "dfd",
+            is_completed : is_completed,
+            members_p : members_p,
+            project_admins : project_admins
+        };
         axios
             .post("http://localhost:3000/keepTrack/project/",data, {
-                headers: { "Content-Type": "multipart/form-data", "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+                headers: { 'Content-Type': 'application/json', "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
                 params: {withCredentials : true}
             })
             .then((response)=>{
                 console.log(response);
+                props.refreshProjectList(true);
             })
             .catch((err) => {
                 console.log("hemlo")

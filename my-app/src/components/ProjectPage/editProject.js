@@ -12,11 +12,12 @@ import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { MultiSelect } from "react-multi-select-component";
 
-const EditProject = ({projectId}) => {
-    console.log({projectId})
-    const [activeProj, setActiveProj] = React.useState()
+const EditProject = (props) => {
+    console.log(props.data)
+    var allUsers = props.data.usersAll
+    var activeProj = props.data.Proj
+    var projectId = props.data.projectId
     const [projectInfo, setProjectInfo] = React.useState("");
-    
     var today = new Date(),
     date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear()+ ' ' + today.getHours() + ':' + today.getMinutes();
     //datea = date.toISOString();
@@ -32,19 +33,10 @@ const EditProject = ({projectId}) => {
 	// 	readonly: false // all options from https://xdsoft.net/jodit/doc/
 	// }
 
-    // const handleInfoChange = (e) => {
-    //     const {name,value} = e.target;
-    //     setProjectInfo((prevValue)=>({
-    //         ...prevValue,
-    //         [name]:value,
-    //     }));
-    // };
-
     const handleStatusChange = (event, data) => {
         // console.log(is_completed)
         console.log(start_date)
         setis_completed(!is_completed);
-        
     }
     // const handleSDateChange = (event, data) => {
     //     setStart_date(data.value);
@@ -58,50 +50,62 @@ const EditProject = ({projectId}) => {
     const handleDDateChange = (event, data) => setDue_date(data.value);
 
     var handleMembersChange = (e) => {
-        setMembers_p(Array.isArray(e)?e.map(x => x.key):["n"]);
+        var temp = [];
+        for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
+        setMembers_p(temp)
+        projMem = e;
     }
 
     const handleProjAdminsChange = (e) => {
-        setProject_admins(Array.isArray(e)?e.map(x => x.key):["n"]);
+        var temp = [];
+        for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
+        setProject_admins(temp)
+        //setProject_admins(e.key)
+        projAdmin = e;
     }
     
-    async function fetchUserList() {
-        axios
-            .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
-            .then((response) => {
-                setUsers(response.data)
-            })
-            
-            .catch((error) => console.log(error));
-    }
+    // async function fetchUserList() {
+    //     axios
+    //         .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
+    //         .then((response) => {
+    //             setUsers(response.data)
+    //         })
+    //         .catch((error) => console.log(error));
+    // }
      
-    async function fetchProjectDetails() {
-        axios
-            .get('http://localhost:3000/keepTrack/project/'+projectId+'/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
-            .then((response) => {
-                console.log(response)
-                setActiveProj(response.data)
-                console.log(activeProj)
-                
-            })
-            
-            .catch((error) => console.log(error));
-    }
+    
+    // var activeProj ;
+    // async function fetchProjectDetails() {
+    //     await axios
+    //         .get('http://localhost:3000/keepTrack/project/'+projectId+'/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
+    //         .then((response) => {
+    //             console.log(response.data)
+    //             activeProj = response.data
+    //             setProjectInfo(activeProj.project_name);
+    //             setStart_date(activeProj.start_date);
+    //             setDue_date(activeProj.due_date);
+    //             setWiki(activeProj.wiki);
+    //             setis_completed(activeProj.is_completed);
+    //             setMembers_p(activeProj.members_p);
+    //             setProject_admins(activeProj.project_admins)
+    //         })
+    //         .catch((error) => console.log(error));
+    // }
 
-    async function setDetails(){
+    async function setAllFields(){
         setProjectInfo(activeProj.project_name);
         setStart_date(activeProj.start_date);
         setDue_date(activeProj.due_date);
         setWiki(activeProj.wiki);
         setis_completed(activeProj.is_completed);
         setMembers_p(activeProj.members_p);
-        setProject_admins(activeProj.project_admins)
+        setProject_admins(activeProj.project_admins);
+        setUsers(allUsers);
+        
     }
-    
     React.useEffect(()=>{
-        fetchUserList();
-        fetchProjectDetails();
-        setDetails();
+        setAllFields();
+        document.getElementById('xyz').click();
     }, []);
 
     const members = users.map((user)=>({
@@ -110,20 +114,22 @@ const EditProject = ({projectId}) => {
         label : user.username,
         text : user.username
     }))
+    var projMem = members.filter(mem => members_p.indexOf(mem.key)>-1);
+    var projAdmin = members.filter(mem => project_admins.indexOf(mem.key)>-1);
 
     const handleFormSubmit = () => {
-        const data = new FormData();
-        data.append("project_name", projectInfo);
-        data.append("start_date", "2021-09-04T10:18:00Z");
-        data.append("due_date","2021-09-04T10:18:00Z");
-        data.append("wiki",wiki);
-        data.append("is_completed",is_completed);
-        data.append("members_p",members_p);
-        data.append("project_admins",project_admins);
-
+        const data = {
+            project_name : projectInfo,
+            start_date : "2021-09-04T10:18:00Z",
+            due_date : "2021-09-04T10:18:00Z",
+            wiki : "dfd",
+            is_completed : is_completed,
+            members_p : members_p,
+            project_admins : project_admins
+        };
         axios
-            .put("http://localhost:3000/keepTrack/project/",data, {
-                headers: { "Content-Type": "multipart/form-data", "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+            .put("http://localhost:3000/keepTrack/project/"+projectId+"/",data, {
+                headers: { 'Content-Type': 'application/json', "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
                 params: {withCredentials : true}
             })
             .then((response)=>{
@@ -132,14 +138,13 @@ const EditProject = ({projectId}) => {
             .catch((err) => {
                 console.log("hemlo")
                 console.log(err);
-                
             });
     }
 
     return(
         <div>
         <Popup
-            trigger={<button className="button"> Edit </button>}
+            trigger={<button className="button xxyy" id="xyz"> Edit </button>}
             modal
             className="temp"
             nested
@@ -225,9 +230,16 @@ const EditProject = ({projectId}) => {
                     ></Select> */}
                     <MultiSelect
                         options={members}
-                        value={members_p}
-                        onChange={setMembers_p}
-                        labelledBy="Select"
+                        value={projMem}
+                        onChange={handleMembersChange}
+                        labelledBy="Members"
+                    />
+                    <br></br>
+                    <MultiSelect
+                        options={members}
+                        value={projAdmin}
+                        onChange={handleProjAdminsChange}
+                        labelledBy="Project Admins"
                     />
                     <br></br>
                     <Button 
@@ -236,14 +248,13 @@ const EditProject = ({projectId}) => {
                         console.log('modal closed ');
                         handleFormSubmit()
                         close();
-                        }}>Add Project</Button>
+                        }}>Update Project</Button>
                 </Form>
             </div>
             )}
         </Popup>
         </div>
     );
-    
 }
 
 export default EditProject;
