@@ -9,3 +9,34 @@
 .temp{
     background-color: aliceblue;
 }
+
+/* ProjectPage.js */
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    margin: 0%;
+    /* border : solid rgb(219, 22, 22) 2px; */
+}
+
+.sidebar{
+    width: 6.3vw;
+    height: 100%;
+}
+
+.projectsContainer{
+    width: 100%;
+    border: solid blueviolet 5px;
+}
+
+/* menu.js */
+/* AddProject.js */
+.addproj{
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}

@@ -13,7 +13,7 @@ import Popup from 'reactjs-popup';
 import { MultiSelect } from "react-multi-select-component";
 
 const EditProject = (props) => {
-    console.log(props.data)
+    // console.log(props.data)
     var allUsers = props.data.usersAll
     var activeProj = props.data.Proj
     var projectId = props.data.projectId
@@ -42,6 +42,9 @@ const EditProject = (props) => {
     //     setStart_date(data.value);
     //     var newdaa = new Date();
     //     newdaa = start_date;
+    // }
+    // const handleInfoChange = (e) =>{
+    //     setProjectInfo(e.value);
     // }
     const handleSDateChange = (e) => {
         const {value} = e.target;
@@ -122,7 +125,7 @@ const EditProject = (props) => {
             project_name : projectInfo,
             start_date : "2021-09-04T10:18:00Z",
             due_date : "2021-09-04T10:18:00Z",
-            wiki : "dfd",
+            wiki :wiki,
             is_completed : is_completed,
             members_p : members_p,
             project_admins : project_admins
@@ -134,6 +137,7 @@ const EditProject = (props) => {
             })
             .then((response)=>{
                 console.log(response);
+                props.refreshProjectList(true);
             })
             .catch((err) => {
                 console.log("hemlo")
@@ -151,7 +155,7 @@ const EditProject = (props) => {
         >
             {close => (
             <div className="temp"> 
-                <button onClick={close}>
+                <button onClick={() =>{close();props.refreshProjectList(true);}}>
                 &times;
                 </button>
                
@@ -159,9 +163,10 @@ const EditProject = (props) => {
                     <Form.Input 
                         placeholder='Project Name' 
                         width={16}
+                        type = 'text'
                         name='project_name'
                         value={projectInfo}
-                        onChange= {newInfo => setProjectInfo(newInfo)} />
+                        onChange= {(e) => setProjectInfo(e.target.value)} />
 
                     <Form.Group widths='equal'>
 
@@ -193,7 +198,8 @@ const EditProject = (props) => {
                     <TextArea 
                     placeholder='Wiki' 
                     style={{ minHeight: 100 }}
-                    onChange= {newWiki => setWiki(newWiki)}
+                    value = {wiki}
+                    onChange= {newWiki => setWiki(newWiki.target.value)}
                     />
                     {/* <JoditEditor
                         ref={editor}
@@ -248,6 +254,7 @@ const EditProject = (props) => {
                         console.log('modal closed ');
                         handleFormSubmit()
                         close();
+                        // props.refreshProjectList(true);
                         }}>Update Project</Button>
                 </Form>
             </div>

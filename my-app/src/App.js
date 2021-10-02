@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import Home from './components/Login/home';
 import Login from './components/Login/login';
-import Project from './components/ProjectPage/projects';
+import ProjectPage from './components/ProjectPage/ProjectPage';
 import Info from './components/DashboardPage/Info';
 import AddProject from './components/ProjectPage/addProject';
 import {Route} from 'react-router-dom';
@@ -10,7 +10,6 @@ import {Route} from 'react-router-dom';
 function App() {
   return (
     <div className="App">
-      hi
       <Route exact path="/">
         < Home />
       </Route>
@@ -18,7 +17,7 @@ function App() {
         < Login />
       </Route>
       <Route exact path="/project">
-        < Project />
+        < ProjectPage />
       </Route>
       <Route exact path="/info">
         < Info />

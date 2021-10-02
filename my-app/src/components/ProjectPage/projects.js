@@ -67,6 +67,16 @@ const Project = () => {
             fetchProjectList();
         }
     }
+
+    function emptyTheEdit (a) {
+        if(a===true){
+            a = false;
+            setEditList();
+            console.log("heiii")
+            fetchProjectList();
+        }
+    }
+
     var activeProj = [];
     var data;
     function fetchProjectDetails(projectId) {
@@ -89,23 +99,22 @@ const Project = () => {
             .catch((error) => console.log(error));
     }
 
-    function handleEditEvent2(id) {
+    function handleEditEvent2() {
         if(done === true){
             done = false;
             //console.log("hi");
-            setEditList(<EditProject data = {data} />);
+            setEditList(<EditProject data = {data} refreshProjectList = {emptyTheEdit}/>);
             return;
         }
        
     };
-
+    
     function handleEditEvent(id) {
         //console.log(id)
         fetchProjectDetails(id);
         if(done === true){
             done = false;
             //console.log("hi");
-            setEditList(<EditProject data = {data} />);
             return;
         }
         

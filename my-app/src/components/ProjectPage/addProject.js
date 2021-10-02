@@ -107,7 +107,7 @@ const AddProject = (props) => {
             project_name : projectInfo.project_name,
             start_date : "2021-09-04T10:18:00Z",
             due_date : "2021-09-04T10:18:00Z",
-            wiki : "dfd",
+            wiki : wiki,
             is_completed : is_completed,
             members_p : members_p,
             project_admins : project_admins
@@ -131,10 +131,12 @@ const AddProject = (props) => {
     return(
         <div>
         <Popup
-            trigger={<button className="button"> Add Project </button>}
+            trigger={<button className="addproj"> Add Project </button>}
             modal
             className="temp"
             nested
+            closeOnDocumentClick
+            // onClose = {props.refreshProjectList(true)}
         >
             {close => (
             <div className="temp"> 
@@ -180,7 +182,8 @@ const AddProject = (props) => {
                     <TextArea 
                     placeholder='Wiki' 
                     style={{ minHeight: 100 }}
-                    onChange= {newWiki => setWiki(newWiki)}
+                    value = {wiki}
+                    onChange= {newWiki => setWiki(newWiki.target.value)}
                     />
                     {/* <JoditEditor
                         ref={editor}
