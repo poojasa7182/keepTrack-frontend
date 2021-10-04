@@ -1,15 +1,128 @@
-.projectBox{
-    border : solid black 2px;
+/* projects.js */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
+
+.container-proj{
+    width: 100%;
+    height: 100%;
+    background-color: #1b1c1df5;
 }
 
+.header{
+    display: flex;
+    width: 100%;
+    height: 12vh;
+    background-color: #1b1c1dfb;
+}
+
+.heading{
+    width:80%;
+    padding-left: 2%;
+    text-align:left;
+    align-self: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.75em;
+    color: whitesmoke;
+}
+.addProj{
+    width: 10%;
+    align-self: center;
+    color: whitesmoke;
+}
+
+.projectBox{
+    height: 88vh;
+    overflow-y: scroll;
+}
+
+.card-green{
+    /* background-color: rgba(255, 255, 255, 0.473) !important; */
+    border-bottom : solid rgb(93, 230, 93) 2px !important;
+}
+
+.card-red{
+    /* background-color: rgba(255, 255, 255, 0.473) !important; */
+    border-bottom : solid red 2px !important;
+}
+
+.project-cards{
+    text-align: justify;
+    margin: 2%;
+   
+}
+
+.card-header{
+    height: 12%;
+    background-color: transparent;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 2.4em;
+}
+
+.card-content-extra{
+    color: rgb(110, 109, 109);
+}
+
+.edit-delete{
+    width: 45%;
+}
+
+.footer{
+    background-color: #19191a;
+    border-top: whitesmoke;
+    color: whitesmoke;
+}
+/* add-edit project  */
 .form{
     margin: 10px;
 }
 
-.temp{
-    background-color: aliceblue;
+.addProjPopUp {
+    /* background-color: aliceblue; */
+    background: rgba(0, 0, 0, 0.363);
+    backdrop-filter: saturate(180%) blur(10px);
+    width:50vw;
+    height: 75vh;
+    position: fixed;
+    left:25vw;
+    top:12.5vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: space-around;
 }
 
+.editProjPopUp{
+    /* background-color: aliceblue; */
+    background: rgba(0, 0, 0, 0.363);
+    backdrop-filter: saturate(180%) blur(10px);
+    width:50vw;
+    height: 75vh;
+    position: fixed;
+    left:25vw;
+    top:12.5vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: space-around;
+}
+
+.form-popup{
+    padding: 5%;
+    
+}
+.button-close{
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    height: 10%;
+}
+
+.flex-div{
+    display: flex;
+    justify-content: space-evenly;
+}
 /* ProjectPage.js */
 .container {
     display: flex;
@@ -20,13 +133,13 @@
 }
 
 .sidebar{
-    width: 6.3vw;
+    width: 113px;
     height: 100%;
 }
 
 .projectsContainer{
     width: 100%;
-    border: solid blueviolet 5px;
+    /* border: solid blueviolet 5px; */
 }
 
 /* menu.js */

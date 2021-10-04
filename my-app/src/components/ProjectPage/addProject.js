@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import Select from 'react-select'
 import './temp.css';
-import { Form, Checkbox, Button, TextArea } from 'semantic-ui-react';
+import { Form, Checkbox, Button, TextArea, Menu, Icon } from 'semantic-ui-react';
 import { DateTimeInput } from 'semantic-ui-calendar-react';
 import axios from "axios";
 import JoditEditor from "jodit-react";
@@ -52,8 +52,9 @@ const AddProject = (props) => {
     //     newdaa = start_date;
     // }
     const handleSDateChange = (e) => {
-        const {value} = e.target;
-        setStart_date(value);
+        console.log(e)
+        // const {value} = e.target;
+        // setStart_date(value);
     }
     const handleDDateChange = (event, data) => setDue_date(data.value);
 
@@ -112,6 +113,16 @@ const AddProject = (props) => {
             members_p : members_p,
             project_admins : project_admins
         };
+        setProjectInfo((prevValue)=>({
+            ...prevValue,
+            project_name:'',
+        }));
+        setStart_date(today)
+        setDue_date(today)
+        setWiki('')
+        setis_completed(false)
+        setMembers_p([])
+        setProject_admins([])
         axios
             .post("http://localhost:3000/keepTrack/project/",data, {
                 headers: { 'Content-Type': 'application/json', "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
@@ -131,7 +142,9 @@ const AddProject = (props) => {
     return(
         <div>
         <Popup
-            trigger={<button className="addproj"> Add Project </button>}
+            trigger={<button className="addproj"> 
+            <Icon name='add square' size='big'/>
+            </button>}
             modal
             className="temp"
             nested
@@ -139,12 +152,8 @@ const AddProject = (props) => {
             // onClose = {props.refreshProjectList(true)}
         >
             {close => (
-            <div className="temp"> 
-                <button onClick={close}>
-                &times;
-                </button>
-               
-                <Form >
+            <div className="addProjPopUp"> 
+                <Form className='form-popup'>
                     <Form.Input 
                         placeholder='Project Name' 
                         width={16}
@@ -161,19 +170,14 @@ const AddProject = (props) => {
                         value={start_date}
                         onChange={handleSDateChange} /> */}
                         
-                        <Datetime
+                        <DateTimeInput 
                         placeholder='Start Date'
                         name='start_date'
                         value = {start_date}
-                        width={8}
-                        timeFormat = {true}
-                        onChange={handleSDateChange}
-                        />
-
+                        onChange={handleSDateChange}/>
                         <DateTimeInput 
                         placeholder='Due/End Date'
                         name='due_date'
-                        width={8}
                         value={due_date}
                         onChange={handleDDateChange} />
 
@@ -219,14 +223,20 @@ const AddProject = (props) => {
                         onChange={handleProjAdminsChange}
                     ></Select>
                     <br></br>
+                    <div className='flex-div'>
                     <Button 
+                        color='teal'
                         type='button'
                         onClick={() => {
                         console.log('modal closed ');
                         handleFormSubmit()
                         close();
                         }}>Add Project</Button>
+                    </div>
                 </Form>
+                <button onClick={close} className="button-close">
+                <Icon name='close' color='red' size='big'/>
+                </button>
             </div>
             )}
         </Popup>

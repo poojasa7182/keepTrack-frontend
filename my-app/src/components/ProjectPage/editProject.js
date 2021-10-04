@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import Select from 'react-select'
 import './temp.css';
-import { Form, Checkbox, Button, TextArea } from 'semantic-ui-react';
+import { Form, Checkbox, Button, TextArea, Icon } from 'semantic-ui-react';
 import { DateTimeInput } from 'semantic-ui-calendar-react';
 import axios from "axios";
 import JoditEditor from "jodit-react";
@@ -47,8 +47,9 @@ const EditProject = (props) => {
     //     setProjectInfo(e.value);
     // }
     const handleSDateChange = (e) => {
-        const {value} = e.target;
-        setStart_date(value);
+        console.log(e)
+        // const {value} = e.target;
+        // setStart_date(value);
     }
     const handleDDateChange = (event, data) => setDue_date(data.value);
 
@@ -154,18 +155,17 @@ const EditProject = (props) => {
             nested
         >
             {close => (
-            <div className="temp"> 
-                <button onClick={() =>{close();props.refreshProjectList(true);}}>
-                &times;
-                </button>
+            <div className="editProjPopUp"> 
+                
                
-                <Form >
+                <Form className='form-popup'>
                     <Form.Input 
                         placeholder='Project Name' 
                         width={16}
                         type = 'text'
                         name='project_name'
                         value={projectInfo}
+                        className='input-box'
                         onChange= {(e) => setProjectInfo(e.target.value)} />
 
                     <Form.Group widths='equal'>
@@ -177,19 +177,30 @@ const EditProject = (props) => {
                         value={start_date}
                         onChange={handleSDateChange} /> */}
                         
-                        <Datetime
+                        {/* <Datetime
                         placeholder='Start Date'
                         name='start_date'
-                        value = {start_date}
                         width={8}
+                        value = {start_date}
                         timeFormat = {true}
                         onChange={handleSDateChange}
                         />
-
-                        <DateTimeInput 
+                        <Datetime
                         placeholder='Due/End Date'
                         name='due_date'
                         width={8}
+                        value={due_date}
+                        onChange={handleDDateChange}
+                        timeFormat = {true}
+                        /> */}
+                        <DateTimeInput 
+                        placeholder='Start Date'
+                        name='start_date'
+                        value = {start_date}
+                        onChange={handleSDateChange}/>
+                        <DateTimeInput 
+                        placeholder='Due/End Date'
+                        name='due_date'
                         value={due_date}
                         onChange={handleDDateChange} />
 
@@ -248,7 +259,9 @@ const EditProject = (props) => {
                         labelledBy="Project Admins"
                     />
                     <br></br>
+                    <div className='flex-div'>
                     <Button 
+                        color='teal'
                         type='button'
                         onClick={() => {
                         console.log('modal closed ');
@@ -256,7 +269,11 @@ const EditProject = (props) => {
                         close();
                         // props.refreshProjectList(true);
                         }}>Update Project</Button>
+                    </div>
                 </Form>
+                <button className="button-close" onClick={() =>{close();props.refreshProjectList(true);}}>
+                <Icon name='close' color='red' size='big'/>
+                </button>
             </div>
             )}
         </Popup>

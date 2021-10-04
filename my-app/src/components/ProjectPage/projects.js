@@ -1,15 +1,9 @@
 import React, {useRef} from 'react';
-import Select from 'react-select'
 import './temp.css';
-import { Form, Checkbox, Button, TextArea } from 'semantic-ui-react';
-import { DateTimeInput } from 'semantic-ui-calendar-react';
+import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid } from 'semantic-ui-react';
 import axios from "axios";
-import JoditEditor from "jodit-react";
-import dateFormat from 'dateformat';
-import Datetime from 'react-datetime';
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
-import Popup from 'reactjs-popup';
 import AddProject from './addProject'
 import EditProject from './editProject'
 
@@ -77,6 +71,34 @@ const Project = () => {
         }
     }
 
+    const members = users.map((user)=>({
+        key : user.id,
+        value : user.id,
+        label : user.username,
+        text : user.username
+    }))
+    
+    function getMembers(members_p){
+        let memberList = []
+        members_p.map(user =>{
+            users.map(item=>{
+                if(item.id==user){
+                    memberList.push(item.username)
+                }
+            })
+        })
+        return memberList
+    }
+
+    function getCreator(members_p){
+        let name = ''
+            users.map(item=>{
+                if(item.id==members_p){
+                    name =  (item.username)
+                }
+            })
+        return name
+    }
     var activeProj = [];
     var data;
     function fetchProjectDetails(projectId) {
@@ -122,24 +144,81 @@ const Project = () => {
 
     return(
  
-        <div>
+        <div className='container-proj'>
+            <div className='header'>
+                <div className='heading'>
+                    <h1 className='heading'>
+                        Projects
+                    </h1>
+                </div>
+                <div className='addProj'>
+                        <div >
+                            <AddProject refreshProjectList = {callFetchFunction}   />
+                        </div>
+                        <div>
+                            Add Project
+                        </div>
+                </div>
+            </div>
             <div className="projectBox">
+                <Grid container columns={3}>
                 {projects.map(function(project, index){
                     return(
-                        <div key={project.id}>
-                            {project.id},
-                            {project.project_name}
-                            &nbsp;&nbsp;
-                            <button type="button" onClick={() => handleDeleteEvent(project.id)}>Delete</button>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <button type="button"  onClick={() => handleEditEvent(project.id)}>Edit</button> 
+                        
+                        <div key={project.id} className='project-cards'>
+                            <Card className={(project.is_completed)?'card-green':'card-red'} >
+                            <Card.Content>
+                                <Button
+                                color='teal'
+                                circular
+                                floated='right'
+                                size='mini'
+                                > 
+                                    Add List
+                                </Button>
+                                <div className='card-header'>{project.project_name}</div>
+                                <br></br>
+                                <div className='card-content-extra'><strong>Created by: </strong>{getCreator(project.creator)}</div>
+                                <Card.Description>
+                                    {project.wiki}
+                                </Card.Description>
+                            </Card.Content>
+                            <Card.Content extra>
+                                <div className='card-content-extra'>
+                                <Card.Description>
+                                    <strong>Start Date:</strong>{project.start_date}
+                                    <br></br>
+                                    <strong>Due Date:</strong>{project.due_date}
+                                </Card.Description>
+                                </div>
+                                
+                            </Card.Content>
+                            <Card.Content extra>
+                                <div className='card-content-extra'>
+                                <Card.Description>
+                                    <strong>Members: </strong>{' '+getMembers(project.members_p)+' '}
+                                    <br></br>
+                                    <strong>Project admins: </strong>{getMembers(project.project_admins)+' '}
+                                </Card.Description>
+                                <br></br>
+                                <Button className='edit-delete' floated='left' basic color='yellow' onClick={() => handleEditEvent(project.id)}>
+                                    <Icon name='edit' /> Edit
+                                </Button>
+                                <Button className='edit-delete' floated='right'basic color='red' onClick={() => handleDeleteEvent(project.id)}>
+                                    <Icon name='dont' />Delete
+                                </Button>
+                                </div>
+                            </Card.Content>
+                            </Card>
                         </div>
+                        
                     )
                 })}
+                </Grid>
             </div>
-            <AddProject 
-                refreshProjectList = {callFetchFunction}     
-            />
+            <div className='footer'>
+                Footer
+            </div>
             {editList}
         </div>
     );

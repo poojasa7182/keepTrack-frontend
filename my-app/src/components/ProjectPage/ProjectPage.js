@@ -11,9 +11,6 @@ const ProjectPage = () => (
         <div className='projectsContainer'>
             <Project />
         </div>
-            
-            
-        
     </div>
   
 )
