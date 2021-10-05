@@ -3,16 +3,16 @@ import './temp.css';
 import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import AddProject from './addProject'
 import EditProject from './editProject'
+import AddList from '../Lists/addList';
 
 const Project = () => {
     
     const [projects, setProjects] = React.useState([]);
-    const [editList, setEditList] = React.useState();
     const [users, setUsers] = React.useState([]);
-    var done = false;
+
     async function fetchProjectList() {
         axios
             .get('http://localhost:3000/keepTrack/project/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
@@ -28,8 +28,6 @@ const Project = () => {
             .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 setUsers(response.data)
-                // console.log("ha aaya toh hu hi");
-                // console.log(users)
                 fetchProjectList();
             })
             .catch((error) => console.log(error));
@@ -62,11 +60,13 @@ const Project = () => {
         }
     }
 
+    function callFetchFunction2 (a){
+        return
+    }
+
     function emptyTheEdit (a) {
         if(a===true){
             a = false;
-            setEditList();
-            console.log("heiii")
             fetchProjectList();
         }
     }
@@ -99,51 +99,8 @@ const Project = () => {
             })
         return name
     }
-    var activeProj = [];
-    var data;
-    function fetchProjectDetails(projectId) {
-        axios
-            .get('http://localhost:3000/keepTrack/project/'+projectId+'/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
-            .then((response) => {
-                //console.log(response.data)
-                //console.log(users)
-                activeProj = response.data
-                data = {
-                    Proj : activeProj,
-                    usersAll : users,
-                    projectId : projectId
-                }
-                //console.log(data)
-                done = true;
-                handleEditEvent2(projectId);
-                // document.getElementById('editButton').click();
-            })
-            .catch((error) => console.log(error));
-    }
-
-    function handleEditEvent2() {
-        if(done === true){
-            done = false;
-            //console.log("hi");
-            setEditList(<EditProject data = {data} refreshProjectList = {emptyTheEdit}/>);
-            return;
-        }
-       
-    };
     
-    function handleEditEvent(id) {
-        //console.log(id)
-        fetchProjectDetails(id);
-        if(done === true){
-            done = false;
-            //console.log("hi");
-            return;
-        }
-        
-    };
-
     return(
- 
         <div className='container-proj'>
             <div className='header'>
                 <div className='heading'>
@@ -155,28 +112,17 @@ const Project = () => {
                         <div >
                             <AddProject refreshProjectList = {callFetchFunction}   />
                         </div>
-                        <div>
-                            Add Project
-                        </div>
                 </div>
             </div>
             <div className="projectBox">
                 <Grid container columns={3}>
                 {projects.map(function(project, index){
                     return(
-                        
                         <div key={project.id} className='project-cards'>
                             <Card className={(project.is_completed)?'card-green':'card-red'} >
                             <Card.Content>
-                                <Button
-                                color='teal'
-                                circular
-                                floated='right'
-                                size='mini'
-                                > 
-                                    Add List
-                                </Button>
-                                <div className='card-header'>{project.project_name}</div>
+                                <AddList page={2} id={project.id} project_name={project.project_name}/>
+                                <div className='card-header'><NavLink to={"/project/"+project.id+"/lists"}>{project.project_name}</NavLink></div>
                                 <br></br>
                                 <div className='card-content-extra'><strong>Created by: </strong>{getCreator(project.creator)}</div>
                                 <Card.Description>
@@ -201,9 +147,7 @@ const Project = () => {
                                     <strong>Project admins: </strong>{getMembers(project.project_admins)+' '}
                                 </Card.Description>
                                 <br></br>
-                                <Button className='edit-delete' floated='left' basic color='yellow' onClick={() => handleEditEvent(project.id)}>
-                                    <Icon name='edit' /> Edit
-                                </Button>
+                                <EditProject Proj = {project} usersAll = {users} projectId = {project.id} refreshProjectList = {emptyTheEdit}/>
                                 <Button className='edit-delete' floated='right'basic color='red' onClick={() => handleDeleteEvent(project.id)}>
                                     <Icon name='dont' />Delete
                                 </Button>
@@ -216,10 +160,6 @@ const Project = () => {
                 })}
                 </Grid>
             </div>
-            <div className='footer'>
-                Footer
-            </div>
-            {editList}
         </div>
     );
      

@@ -3,6 +3,7 @@ import {render} from '@testing-library/react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import './temp2.css';
 
 class Login extends React.Component{
     constructor(props){
@@ -35,26 +36,29 @@ class Login extends React.Component{
                         
         // console.log(user1)
         //var csrftoken = getCookie('csrftoken');
-        axios
-            .get("http://127.0.0.1:8000/keepTrack/user/login", {
-                params: {code:auth, withCredentials : true}
-            })
-            .then((response)=>{
-                console.log(response);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        // const user1= await axios({url:'http://127.0.0.1:8000/keepTrack/betw' ,method:'GET', params: {code:auth} , withCredentials:true} ).then(console.log("done"));
-        // console.log(user1)
-        await this.setState({loggedIn:true});
+        // axios
+        //     .get("http://127.0.0.1:3000/keepTrack/login", {
+        //         params: {code:auth, withCredentials : true}
+        //     })
+        //     .then((response)=>{
+        //         console.log(response);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+        // // const user1= await axios({url:'http://127.0.0.1:8000/keepTrack/betw' ,method:'GET', params: {code:auth} , withCredentials:true} ).then(console.log("done"));
+        // // console.log(user1)
+        // await this.setState({loggedIn:true});
     }
 
     render(){
         return(
-            <div>
+            <div className='container'>
                 {this.renderRedirect()}
-                Logging in....
+                <div className='image-container'>
+                    Logging in....
+                </div>
+                
             </div>
         )
     }

@@ -13,10 +13,9 @@ import Popup from 'reactjs-popup';
 import { MultiSelect } from "react-multi-select-component";
 
 const EditProject = (props) => {
-    // console.log(props.data)
-    var allUsers = props.data.usersAll
-    var activeProj = props.data.Proj
-    var projectId = props.data.projectId
+    var allUsers = props.usersAll
+    var activeProj = props.Proj
+    var projectId = props.projectId
     const [projectInfo, setProjectInfo] = React.useState("");
     var today = new Date(),
     date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear()+ ' ' + today.getHours() + ':' + today.getMinutes();
@@ -67,34 +66,6 @@ const EditProject = (props) => {
         //setProject_admins(e.key)
         projAdmin = e;
     }
-    
-    // async function fetchUserList() {
-    //     axios
-    //         .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
-    //         .then((response) => {
-    //             setUsers(response.data)
-    //         })
-    //         .catch((error) => console.log(error));
-    // }
-     
-    
-    // var activeProj ;
-    // async function fetchProjectDetails() {
-    //     await axios
-    //         .get('http://localhost:3000/keepTrack/project/'+projectId+'/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
-    //         .then((response) => {
-    //             console.log(response.data)
-    //             activeProj = response.data
-    //             setProjectInfo(activeProj.project_name);
-    //             setStart_date(activeProj.start_date);
-    //             setDue_date(activeProj.due_date);
-    //             setWiki(activeProj.wiki);
-    //             setis_completed(activeProj.is_completed);
-    //             setMembers_p(activeProj.members_p);
-    //             setProject_admins(activeProj.project_admins)
-    //         })
-    //         .catch((error) => console.log(error));
-    // }
 
     async function setAllFields(){
         setProjectInfo(activeProj.project_name);
@@ -107,9 +78,9 @@ const EditProject = (props) => {
         setUsers(allUsers);
         
     }
+
     React.useEffect(()=>{
         setAllFields();
-        document.getElementById('xyz').click();
     }, []);
 
     const members = users.map((user)=>({
@@ -131,6 +102,7 @@ const EditProject = (props) => {
             members_p : members_p,
             project_admins : project_admins
         };
+
         axios
             .put("http://localhost:3000/keepTrack/project/"+projectId+"/",data, {
                 headers: { 'Content-Type': 'application/json', "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
@@ -149,15 +121,17 @@ const EditProject = (props) => {
     return(
         <div>
         <Popup
-            trigger={<button className="button xxyy" id="xyz"> Edit </button>}
+            trigger={   
+                    <Button className='edit-delete' floated='left' basic color='yellow'>
+                        <Icon name='edit' /> Edit
+                    </Button> 
+                    }
             modal
             className="temp"
-            nested
-        >
+            nested>
+
             {close => (
             <div className="editProjPopUp"> 
-                
-               
                 <Form className='form-popup'>
                     <Form.Input 
                         placeholder='Project Name' 
@@ -227,6 +201,7 @@ const EditProject = (props) => {
                     control={Checkbox}
                     width={1}
                     label='Complete?'
+                    checked = {is_completed}
                     onChange={handleStatusChange}
                     />
                     
@@ -264,10 +239,8 @@ const EditProject = (props) => {
                         color='teal'
                         type='button'
                         onClick={() => {
-                        console.log('modal closed ');
                         handleFormSubmit()
                         close();
-                        // props.refreshProjectList(true);
                         }}>Update Project</Button>
                     </div>
                 </Form>

@@ -4,7 +4,7 @@ import Home from './components/Login/home';
 import Login from './components/Login/login';
 import ProjectPage from './components/ProjectPage/ProjectPage';
 import Info from './components/DashboardPage/Info';
-import AddProject from './components/ProjectPage/addProject';
+import ListPage from './components/Lists/ListPage'
 import {Route} from 'react-router-dom';
 
 function App() {
@@ -22,8 +22,8 @@ function App() {
       <Route exact path="/info">
         < Info />
       </Route>
-      <Route exact path="/addProject">
-        < AddProject />
+      <Route exact path="/project/:projectId/lists">
+        < ListPage />
       </Route>
     </div>
   );

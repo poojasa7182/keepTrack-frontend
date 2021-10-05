@@ -1,8 +1,8 @@
-/* projects.js */
+/* lists.js */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 
-.container-proj{
+.container-list{
     width: 100%;
     height: 100%;
     background-color: #1b1c1df5;
@@ -12,7 +12,8 @@
     display: flex;
     width: 100%;
     height: 12vh;
-    background-color: #1b1c1dfb;
+    z-index: 1;
+    background-color: #1a1a1afb;
 }
 
 .heading{
@@ -24,13 +25,13 @@
     font-size: 1.75em;
     color: whitesmoke;
 }
-.addProj{
+.addList{
     width: 10%;
     align-self: center;
     color: whitesmoke;
 }
 
-.projectBox{
+.listBox{
     height: 88vh;
     overflow-y: scroll;
 }
@@ -45,10 +46,10 @@
     border-bottom : solid red 2px !important;
 }
 
-.project-cards{
+.list-cards{
     text-align: justify;
     margin: 2%;
-   
+    color: rgba(0, 0, 0, 0.795);
 }
 
 .card-header{
@@ -66,62 +67,7 @@
     width: 45%;
 }
 
-/* add-edit project  */
-.form{
-    margin: 10px;
-    color: #000;
-}
-
-.addProjPopUp {
-    /* background-color: aliceblue; */
-    background: rgba(0, 0, 0, 0.363);
-    backdrop-filter: saturate(180%) blur(10px);
-    width:50vw;
-    height: 75vh;
-    position: fixed;
-    left:25vw;
-    top:12.5vh;
-    display: flex;
-    justify-content: space-evenly;
-    align-content: space-around;
-    color: black;
-}
-
-.editProjPopUp{
-    /* background-color: aliceblue; */
-    background: rgba(0, 0, 0, 0.363);
-    backdrop-filter: saturate(180%) blur(10px);
-    width:50vw;
-    height: 75vh;
-    position: fixed;
-    left:25vw;
-    top:12.5vh;
-    display: flex;
-    justify-content: space-evenly;
-    align-content: space-around;
-}
-
-.form-popup{
-    padding: 5%;
-    color: black;
-}
-
-.button-close{
-    background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
-    height: 10%;
-}
-
-.flex-div{
-    display: flex;
-    justify-content: space-evenly;
-}
-/* ProjectPage.js */
+/* ListPage.js */
 .container {
     display: flex;
     width: 100%;
@@ -135,7 +81,7 @@
     height: 100%;
 }
 
-.projectsContainer{
+.listsContainer{
     width: 100%;
     /* border: solid blueviolet 5px; */
 }
@@ -148,10 +94,8 @@
     color: whitesmoke;
 }
 
-/* menu.js */
-
-/* AddProject.js */
-.addproj{
+/* addList.js */
+.addlist{
     background: none;
 	color: inherit;
 	border: none;
@@ -159,4 +103,47 @@
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+}
+
+.form{
+    margin: 10px;
+}
+
+.addListPopUp {
+    /* background-color: aliceblue; */
+    background: rgba(0, 0, 0, 0.363);
+    backdrop-filter: saturate(180%) blur(10px);
+    width:50vw;
+    height: 45vh;
+    position: fixed;
+    left:25vw;
+    top:25vh;
+    display: flex;
+    /* color :whitesmoke; */
+}
+
+.form-popup{
+    width : 90%;
+    padding: 10% 0.5% 10% 5%;
+    /* color: whitesmoke; */
+}
+
+.button-close{
+    background: none;
+	color: inherit;
+	border: none;
+	padding-top: 1%;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    height: 10%;
+}
+
+.flex-div{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.flex-div-2{
+    display: flex;
 }

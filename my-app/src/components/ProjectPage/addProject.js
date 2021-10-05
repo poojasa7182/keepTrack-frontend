@@ -143,7 +143,7 @@ const AddProject = (props) => {
         <div>
         <Popup
             trigger={<button className="addproj"> 
-            <Icon name='add square' size='big'/>
+            <Icon name='add square' size='big'/><br></br>Add Project
             </button>}
             modal
             className="temp"
@@ -228,7 +228,6 @@ const AddProject = (props) => {
                         color='teal'
                         type='button'
                         onClick={() => {
-                        console.log('modal closed ');
                         handleFormSubmit()
                         close();
                         }}>Add Project</Button>

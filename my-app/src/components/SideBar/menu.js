@@ -40,8 +40,6 @@ const SidebarMenu = () => {
                 {/* pass visible={(window.location.href=='http://localhost:3000/project')?true:undefined} */}
                 <Menu.Item >
                     <AddProject />
-                    <br></br>
-                    Add Project
                 </Menu.Item>
             </Sidebar>
     )
