@@ -3,11 +3,11 @@ import { Form, Loader, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Gr
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 import './temp1.css';
 import AddList from './addList';
 import EditList from './editList';
-
+import AddCard from '../Cards/addcards'
 const Lists = () => {
     const params = useParams();
     const projectId = params.projectId
@@ -106,15 +106,8 @@ const Lists = () => {
                         <div key={list.id} className='list-cards'>
                             <Card className={(list.is_completed)?'card-green':'card-red'} >
                             <Card.Content>
-                                <Button
-                                color='orange'   //orange blue
-                                circular
-                                floated='right'
-                                size='mini'
-                                > 
-                                    Add Card
-                                </Button>
-                                <div className='card-header'>{list.list_name}</div>
+                            <AddCard page={2} users={users} refreshProjectList = {callFetchFunction} projectId={curProject.id} listId={list.id} project_name={curProject.project_name} list_name={list.list_name} />
+                                <div className='card-header'><NavLink to={"/project/"+curProject.id+"/list/"+list.id+"/cards"}>{list.list_name}</NavLink></div>
                                 <br></br>
                             </Card.Content>
                             

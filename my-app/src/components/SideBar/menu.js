@@ -2,7 +2,6 @@ import React from 'react'
 import { Icon, Menu, Sidebar } from 'semantic-ui-react'
 import {Route,Link} from 'react-router-dom';
 import AddProject from '../ProjectPage/addProject';
-import './temp.css';
 const SidebarMenu = () => {
     const visible = !(window.location.href=='http://localhost:3000/project')
     // console.log(visible)

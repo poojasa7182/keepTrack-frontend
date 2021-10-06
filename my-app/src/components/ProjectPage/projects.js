@@ -115,7 +115,7 @@ const Project = () => {
                 </div>
             </div>
             <div className="projectBox">
-                <Grid container columns={3}>
+                <Grid  columns={3} className='projectBox2'>
                 {projects.map(function(project, index){
                     return(
                         <div key={project.id} className='project-cards'>

@@ -6,6 +6,7 @@ import ProjectPage from './components/ProjectPage/ProjectPage';
 import Info from './components/DashboardPage/Info';
 import ListPage from './components/Lists/ListPage'
 import {Route} from 'react-router-dom';
+import CardPage from './components/Cards/CardPage'
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
       </Route>
       <Route exact path="/project/:projectId/lists">
         < ListPage />
+      </Route>
+      <Route exact path="/project/:projectId/list/:listId/cards">
+        < CardPage />
       </Route>
     </div>
   );
