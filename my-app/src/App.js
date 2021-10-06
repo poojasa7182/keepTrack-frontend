@@ -3,7 +3,7 @@ import React from 'react';
 import Home from './components/Login/home';
 import Login from './components/Login/login';
 import ProjectPage from './components/ProjectPage/ProjectPage';
-import Info from './components/DashboardPage/Info';
+import DashBoardPage from './components/DashboardPage/dashBoardPage';
 import ListPage from './components/Lists/ListPage'
 import {Route} from 'react-router-dom';
 import CardPage from './components/Cards/CardPage'
@@ -21,7 +21,7 @@ function App() {
         < ProjectPage />
       </Route>
       <Route exact path="/info">
-        < Info />
+        < DashBoardPage />
       </Route>
       <Route exact path="/project/:projectId/lists">
         < ListPage />
