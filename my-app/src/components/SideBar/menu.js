@@ -28,11 +28,11 @@ const SidebarMenu = () => {
                 <Icon name='folder open' />
                     Projects
                 </Menu.Item>
-                <Menu.Item as={Link} to='/project'>
+                <Menu.Item as={Link} to='/dashboard'>
                 <Icon name='address book' />
                     Dashboard
                 </Menu.Item>
-                <Menu.Item as={Link} to='/project'>
+                <Menu.Item as={Link} to='/users'>
                 <Icon name='users' />
                     Users
                 </Menu.Item>

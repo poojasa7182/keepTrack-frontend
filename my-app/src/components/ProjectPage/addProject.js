@@ -95,15 +95,6 @@ const AddProject = (props) => {
 
     const handleFormSubmit = () => {
         done = true
-        // console.log(members_p)
-        // const data = new FormData();
-        // data.append("project_name", projectInfo.project_name);
-        // data.append("start_date", "2021-09-04T10:18:00Z");
-        // data.append("due_date","2021-09-04T10:18:00Z");
-        // data.append("wiki",wiki);
-        // data.append("is_completed",is_completed);
-        // data.append("members_p",members_p);
-        // data.append("project_admins",project_admins);
         const data = {
             project_name : projectInfo.project_name,
             start_date : "2021-09-04T10:18:00Z",
@@ -143,7 +134,7 @@ const AddProject = (props) => {
         <div>
         <Popup
             trigger={<button className="addproj"> 
-            <Icon name='add square' size='big'/><br></br>Add Project
+            <Icon name='add square' size='big'/><br></br><br></br>Add Project
             </button>}
             modal
             className="temp"

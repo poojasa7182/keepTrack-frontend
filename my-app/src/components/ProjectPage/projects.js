@@ -102,9 +102,9 @@ const Project = () => {
     
     return(
         <div className='container-proj'>
-            <div className='header'>
-                <div className='heading'>
-                    <h1 className='heading'>
+            <div className='header-p'>
+                <div className='heading-p'>
+                    <h1 className='heading-p'>
                         Projects
                     </h1>
                 </div>

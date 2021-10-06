@@ -1,16 +1,16 @@
 import React from 'react'
-import Project from './projects'
 import SidebarMenu from '../SideBar/menu'
-import './temp.css';
+import './temp5.css';
+import Users from './users';
 
-const ProjectPage = () => (
+const UsersPage = () => (
     <div>
         <div className='container'>
             <div className='sidebar'>
                 <SidebarMenu />
             </div>
             <div className='projectsContainer'>
-                <Project />
+                <Users />
             </div>
         </div>
         <div className='footer'>
@@ -19,4 +19,4 @@ const ProjectPage = () => (
     </div>
 )
 
-export default ProjectPage
+export default UsersPage

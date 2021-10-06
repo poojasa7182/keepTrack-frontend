@@ -5,17 +5,17 @@
 .container-proj{
     width: 100%;
     height: 100%;
-    background-color: #1b1c1df5;
+    /* background-color: #1b1c1df5; */
 }
 
-.header{
+.header-p{
     display: flex;
     width: 100%;
     height: 12vh;
     background-color: #1b1c1dfb;
 }
 
-.heading{
+.heading-p{
     width:80%;
     padding-left: 2%;
     text-align:left;

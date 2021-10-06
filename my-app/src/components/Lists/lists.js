@@ -8,6 +8,7 @@ import './temp1.css';
 import AddList from './addList';
 import EditList from './editList';
 import AddCard from '../Cards/addcards'
+
 const Lists = () => {
     const params = useParams();
     const projectId = params.projectId
@@ -100,7 +101,7 @@ const Lists = () => {
                 </div>
             </div>
             <div className="listBox">
-                <Grid container columns={3}>
+                <Grid container columns={3} className='grid-l'>
                 {lists.map(function(list, index){
                     return(
                         <div key={list.id} className='list-cards'>

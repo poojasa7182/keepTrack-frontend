@@ -2,26 +2,15 @@ import React, {useRef} from 'react';
 import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Image, Segment } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
-import imgLoad from './route (1).png'
-import './temp4.css'
-import EditCard from '../Cards/editcards'
+import { Redirect, NavLink, useParams } from 'react-router-dom';
+
 const UserInfo = () => {
-    
+    const params = useParams();
+    const userId = params.userId
     const [userInfo, setUserInfo] = React.useState([]);
     const [menu, setMenu] = React.useState('cards');
     const [userCards, setUserCards] = React.useState([]);
     const [userProjects, setUserProjects] = React.useState([]);
-    const [users, setUsers] = React.useState([]);
-    
-    async function fetchUserList() {
-        await axios
-            .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
-            .then((response) => {
-                setUsers(response.data)
-            })
-            .catch((error) => console.log(error));
-    }
 
     const handleMenuChange = (e,{name}) => {
         setMenu(name)
@@ -29,7 +18,7 @@ const UserInfo = () => {
     
     async function fetchUserDetails() {
         await axios
-            .get('http://localhost:3000/keepTrack/user/info', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
+            .get('http://localhost:3000/keepTrack/user/'+userId+'/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 // console.log(response.data)
                 setUserInfo(response.data)
@@ -40,7 +29,7 @@ const UserInfo = () => {
 
     async function fetchUsercards() {
         await axios
-            .get('http://localhost:3000/keepTrack/user/cards', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
+            .get('http://localhost:3000/keepTrack/users/'+userId+'/tasks', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 console.log(response.data)
                 setUserCards(response.data)
@@ -51,7 +40,7 @@ const UserInfo = () => {
 
     async function fetchUserProjects() {
         await axios
-            .get('http://localhost:3000/keepTrack/user/projects', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
+            .get('http://localhost:3000/keepTrack/users/'+userId+'/projects', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 console.log(response.data)
                 setUserProjects(response.data)
@@ -61,39 +50,14 @@ const UserInfo = () => {
     
     React.useEffect(()=>{
         fetchUserDetails();
-        fetchUserList();
     }, []);
-    
-    function handleDeleteEvent(id) {
-        axios
-            .delete("http://localhost:3000/keepTrack/card/"+ id +"/", {
-                headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
-                params: {withCredentials : true}
-            })
-            .then((response)=>{
-                console.log(response);
-                fetchUsercards();
-            })
-            .catch((err) => {
-                console.log("hemlo")
-                console.log(err);
-            });
-    };
-
-    const callFetchFunction=(a)=>{
-        if(a===true){
-            a=false
-            fetchUsercards();
-        }
-        return
-    }
 
     return(
         <div className='container-dashboard'>
             <div className='header-i'>
                 <div className='heading-i'>
                     <h1 className='heading-i'>
-                        DashBoard
+                        Users
                     </h1>
                 </div>
             </div>
@@ -142,14 +106,6 @@ const UserInfo = () => {
                                             </Card.Description>
                                             </div>
                                         </Card.Content>
-                                        <Card.Content extra>
-                                            <div className='card-content-extra-i'>
-                                            <EditCard card = {card} users = {users} project_name={card.project_c.project_name} list_name={card.list_c.list_name} refreshProjectList = {callFetchFunction}/>
-                                            <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
-                                                <Icon name='dont' />Delete
-                                            </Button> 
-                                            </div>
-                                        </Card.Content>
                                         <Card.Content className='user-card-description'>
                                             <Button color='teal' as={NavLink} to={'project/'+card.project_c.id+'/lists'}><strong>Project : </strong>{card.project_c.project_name}</Button>
                                             <br></br>
@@ -164,7 +120,7 @@ const UserInfo = () => {
                             <Grid columns={3} className='user-cards-box'>
                             {userProjects.map(function(card){
                                 return(
-                                    <Card className={(card.is_completed)?'card-green-i':'card-red-i'}>
+                                    <Card key= {card.id} className={(card.is_completed)?'card-green-i':'card-red-i'}>
                                         <Button color='teal' as={NavLink} to={'project/'+card.id+'/lists'}>View project</Button>
                                         <br></br>
                                         <Card.Header className='user-card-header'>{card.project_name}</Card.Header>
