@@ -10,7 +10,7 @@ import EditCard from './editcards';
 // import AddProject from './addProject'
 // import EditProject from './editProject'
 // import AddList from '../Lists/addList';
-
+import Member from '../ProjectPage/member2'
 const ListCard = () => {
     const params = useParams();
     const listId = params.listId
@@ -166,10 +166,28 @@ const ListCard = () => {
                             <Card.Content extra>
                                 <div className='card-content-extra-c'>
                                 <Card.Description>
-                                    <strong>Assigned to: </strong>{' '+getMembers(card.members_c)+' '}
+                                    <strong>Assigned to: </strong>
+                                    <div className='flex-div-2'>
+                                        {
+                                            card.members_c.map(function(user,index){
+                                                return(
+                                                        users.map(function(item,index2){
+                                                        if(item.id===user){
+                                                            return(
+                                                                // <div key = {item.id} className='flex-div-2'>
+                                                                    <Member key = {item.id} user = {item} />
+                                                                // </div>
+                                                                
+                                                            )
+                                                        }
+                                                    })
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </Card.Description>
                                 <br></br>
-                                <EditCard card = {card} users = {users} project_name={curProject.project_name} list_name={curList.list_name} refreshProjectList = {callFetchFunction}/>
+                                <EditCard page={1} card = {card} users = {users} project_name={curProject.project_name} list_name={curList.list_name} refreshProjectList = {callFetchFunction}/>
                                 <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
                                     <Icon name='dont' />Delete
                                 </Button> 

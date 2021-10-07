@@ -86,8 +86,8 @@ const EditProject = (props) => {
     const members = users.map((user)=>({
         key : user.id,
         value : user.id,
-        label : user.username,
-        text : user.username
+        label : user.name,
+        text : user.name
     }))
     var projMem = members.filter(mem => members_p.indexOf(mem.key)>-1);
     var projAdmin = members.filter(mem => project_admins.indexOf(mem.key)>-1);
@@ -244,7 +244,7 @@ const EditProject = (props) => {
                         }}>Update Project</Button>
                     </div>
                 </Form>
-                <button className="button-close" onClick={() =>{close();props.refreshProjectList(true);}}>
+                <button className="button-close" onClick={() =>{close();props.refreshProjectList(true);setAllFields()}}>
                 <Icon name='close' color='red' size='big'/>
                 </button>
             </div>

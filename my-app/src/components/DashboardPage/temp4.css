@@ -91,3 +91,8 @@
     flex-direction: column;
     justify-content: space-evenly;
 }
+
+.avtar-info{
+    float: left;
+    margin-right: 2%;
+}

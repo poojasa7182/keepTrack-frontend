@@ -2,6 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 
+
+Multiselect > label{
+    color: black;
+}
 .container-proj{
     width: 100%;
     height: 100%;

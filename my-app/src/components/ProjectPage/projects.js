@@ -7,9 +7,9 @@ import { Redirect, NavLink } from 'react-router-dom';
 import AddProject from './addProject'
 import EditProject from './editProject'
 import AddList from '../Lists/addList';
+import Member from './member2';
 
 const Project = () => {
-    
     const [projects, setProjects] = React.useState([]);
     const [users, setUsers] = React.useState([]);
 
@@ -18,7 +18,6 @@ const Project = () => {
             .get('http://localhost:3000/keepTrack/project/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 setProjects(response.data)
-                
             })
             .catch((error) => console.log(error));
     }
@@ -94,7 +93,7 @@ const Project = () => {
         let name = ''
             users.map(item=>{
                 if(item.id==members_p){
-                    name =  (item.username)
+                    name =  (item.name)
                 }
             })
         return name
@@ -142,9 +141,44 @@ const Project = () => {
                             <Card.Content extra>
                                 <div className='card-content-extra'>
                                 <Card.Description>
-                                    <strong>Members: </strong>{' '+getMembers(project.members_p)+' '}
-                                    <br></br>
-                                    <strong>Project admins: </strong>{getMembers(project.project_admins)+' '}
+                                    <div className='flex-div-2'>
+                                    <strong>Members: &nbsp; </strong>
+                                    <div className='flex-div-2'>{
+                                        project.members_p.map(function(user,index){
+                                            return(
+                                                    users.map(function(item,index2){
+                                                    if(item.id===user){
+                                                        return(
+                                                            // <div key = {item.id} className='flex-div-2'>
+                                                                <Member key = {item.id} user = {item} />
+                                                            // </div>
+                                                            
+                                                        )
+                                                    }
+                                                })
+                                            )
+                                        })}
+                                        </div>
+                                    </div>
+                                    <div className='flex-div-2'>
+                                    <strong>Project admins: &nbsp; </strong>
+                                    <div className='flex-div-2'>{
+                                        project.project_admins.map(function(user,index){
+                                            return(
+                                                    users.map(function(item,index2){
+                                                    if(item.id===user){
+                                                        return(
+                                                            // <div key = {item.id} className='flex-div-2'>
+                                                                <Member key = {item.id} user = {item} />
+                                                            // </div>
+                                                            
+                                                        )
+                                                    }
+                                                })
+                                            )
+                                        })}
+                                        </div>
+                                    </div>
                                 </Card.Description>
                                 <br></br>
                                 <EditProject Proj = {project} usersAll = {users} projectId = {project.id} refreshProjectList = {emptyTheEdit}/>

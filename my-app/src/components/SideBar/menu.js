@@ -37,8 +37,12 @@ const SidebarMenu = () => {
                     Users
                 </Menu.Item>
                 {/* pass visible={(window.location.href=='http://localhost:3000/project')?true:undefined} */}
-                <Menu.Item >
+                <Menu.Item as='' to='/'>
                     <AddProject />
+                </Menu.Item>
+                <Menu.Item as={Link} to='/logout'>
+                <Icon name='sign-out alternate' />
+                    Log-out
                 </Menu.Item>
             </Sidebar>
     )

@@ -89,8 +89,8 @@ const AddProject = (props) => {
     const members = users.map((user)=>({
         key : user.id,
         value : user.id,
-        label : user.username,
-        text : user.username,
+        label : user.name,
+        text : user.name,
     }))
 
     const handleFormSubmit = () => {
@@ -134,7 +134,7 @@ const AddProject = (props) => {
         <div>
         <Popup
             trigger={<button className="addproj"> 
-            <Icon name='add square' size='big'/><br></br><br></br>Add Project
+            <Icon name='add square' size='big'/><br></br>Add Project
             </button>}
             modal
             className="temp"

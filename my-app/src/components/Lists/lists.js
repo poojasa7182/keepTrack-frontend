@@ -8,6 +8,7 @@ import './temp1.css';
 import AddList from './addList';
 import EditList from './editList';
 import AddCard from '../Cards/addcards'
+import CardPopup from './cardPopup';
 
 const Lists = () => {
     const params = useParams();
@@ -51,6 +52,7 @@ const Lists = () => {
         axios
             .get('http://localhost:3000/keepTrack/project/'+projectId+'/list', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
+                console.log(response.data)
                 setLists(response.data)
             })
             .catch((error) => console.log(error));
@@ -111,7 +113,12 @@ const Lists = () => {
                                 <div className='card-header'><NavLink to={"/project/"+curProject.id+"/list/"+list.id+"/cards"}>{list.list_name}</NavLink></div>
                                 <br></br>
                             </Card.Content>
-                            
+                            {list.cardsOfList.map(function(card){
+                                return(
+                                    <div key={card.id} className='card-cards-l'>
+                                        <CardPopup card = {card} users={users}/>
+                                    </div>
+                            )})}
                             <Card.Content extra>
                                 <div className='card-content-extra'>
                                     <EditList refreshProjectList = {callFetchFunction} listDetails = {list} project_name = {curProject.project_name}/>

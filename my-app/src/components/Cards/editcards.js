@@ -108,15 +108,13 @@ const EditCard = (props) => {
     return(
         <div>
         <Popup
-            trigger={   
-                    <Button className='edit-delete-c' floated='left' basic color='yellow'>
-                        <Icon name='edit'/> Edit
-                    </Button> 
-                    }
+            trigger={(props.page===1)?(<Button className='edit-delete-c' floated='left' basic color='yellow'>
+            <Icon name='edit'/> Edit
+        </Button>) :(<Button floated='right' icon='edit' circular size='mini' color='yellow'></Button> )}
             modal
             className="temp"
             nested>
-
+                
 {close => (
             <div className="editCardPopUp"> 
                 <Form className='form-popup-c'>

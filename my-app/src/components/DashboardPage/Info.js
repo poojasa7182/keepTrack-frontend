@@ -6,6 +6,8 @@ import { Redirect, NavLink } from 'react-router-dom';
 import imgLoad from './route (1).png'
 import './temp4.css'
 import EditCard from '../Cards/editcards'
+import Avatar from 'react-avatar';
+
 const UserInfo = () => {
     
     const [userInfo, setUserInfo] = React.useState([]);
@@ -100,7 +102,8 @@ const UserInfo = () => {
             <div className="infoBox">
                 <Card className='card-info'>
                     <Card.Content>
-                        <Image floated='left' circular src='https://channeli.in/media/maintainer_site/normie_image/bfd02081-129d-470e-988a-949f6a0a5894.png' size='small'  />
+                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src='' round={true} size={180} textSizeRatio={1} /> &nbsp;
+                        {/* <Image floated='left' circular src='https://channeli.in/media/maintainer_site/normie_image/bfd02081-129d-470e-988a-949f6a0a5894.png' size='small'  /> */}
                         <div className='card-header-i' >
                             {userInfo.name} 
                         </div>
@@ -144,7 +147,7 @@ const UserInfo = () => {
                                         </Card.Content>
                                         <Card.Content extra>
                                             <div className='card-content-extra-i'>
-                                            <EditCard card = {card} users = {users} project_name={card.project_c.project_name} list_name={card.list_c.list_name} refreshProjectList = {callFetchFunction}/>
+                                            <EditCard page={1} card = {card} users = {users} project_name={card.project_c.project_name} list_name={card.list_c.list_name} refreshProjectList = {callFetchFunction}/>
                                             <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
                                                 <Icon name='dont' />Delete
                                             </Button> 

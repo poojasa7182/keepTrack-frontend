@@ -1,7 +1,6 @@
 import './App.css';
 import React from 'react';
 import Home from './components/Login/home';
-import Login from './components/Login/login';
 import ProjectPage from './components/ProjectPage/ProjectPage';
 import DashBoardPage from './components/DashboardPage/dashBoardPage';
 import ListPage from './components/Lists/ListPage';
@@ -9,6 +8,7 @@ import {Route} from 'react-router-dom';
 import CardPage from './components/Cards/CardPage';
 import UsersPage from './components/UsersPage/UsersPage';
 import UsersPageO from './components/UsersPage/UsersPageO';
+import Logout from './components/SideBar/logout';
 
 function App() {
   return (
@@ -16,8 +16,8 @@ function App() {
       <Route exact path="/">
         < Home />
       </Route>
-      <Route exact path="/login">
-        < Login />
+      <Route exact path="/logout">
+        < Logout />
       </Route>
       <Route exact path="/project">
         < ProjectPage />
