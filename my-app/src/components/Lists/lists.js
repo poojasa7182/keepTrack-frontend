@@ -9,6 +9,7 @@ import AddList from './addList';
 import EditList from './editList';
 import AddCard from '../Cards/addcards'
 import CardPopup from './cardPopup';
+import DeletePopUp from '../extra/deletePopup'
 
 const Lists = () => {
     const params = useParams();
@@ -58,21 +59,21 @@ const Lists = () => {
             .catch((error) => console.log(error));
     }
 
-    function handleDeleteEvent(id) {
-        axios
-            .delete("http://localhost:3000/keepTrack/list/"+ id +"/", {
-                headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
-                params: {withCredentials : true}
-            })
-            .then((response)=>{
-                console.log(response);
-                fetchListsOfproject();
-            })
-            .catch((err) => {
-                console.log("hemlo")
-                console.log(err);
-            });
-    };
+    // function handleDeleteEvent(id) {
+    //     axios
+    //         .delete("http://localhost:3000/keepTrack/list/"+ id +"/", {
+    //             headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+    //             params: {withCredentials : true}
+    //         })
+    //         .then((response)=>{
+    //             console.log(response);
+    //             fetchListsOfproject();
+    //         })
+    //         .catch((err) => {
+    //             console.log("hemlo")
+    //             console.log(err);
+    //         });
+    // };
 
     React.useEffect(()=>{
         fetchUserList();
@@ -122,9 +123,7 @@ const Lists = () => {
                             <Card.Content extra>
                                 <div className='card-content-extra'>
                                     <EditList refreshProjectList = {callFetchFunction} listDetails = {list} project_name = {curProject.project_name}/>
-                                    <Button className='edit-delete' floated='right' color='red' basic circular onClick={() => handleDeleteEvent(list.id)}>
-                                        <Icon name='dont' />Delete
-                                    </Button>
+                                    <DeletePopUp type='list' id = {list.id} refreshProjectList = {callFetchFunction}/>
                                 </div>
                             </Card.Content>
                             </Card>

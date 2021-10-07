@@ -8,6 +8,7 @@ import AddProject from './addProject'
 import EditProject from './editProject'
 import AddList from '../Lists/addList';
 import Member from './member2';
+import DeletePopUp from '../extra/deletePopup';
 
 const Project = () => {
     const [projects, setProjects] = React.useState([]);
@@ -36,21 +37,21 @@ const Project = () => {
         fetchUserList();
     }, []);
 
-    function handleDeleteEvent(id) {
-        axios
-            .delete("http://localhost:3000/keepTrack/project/"+ id +"/", {
-                headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
-                params: {withCredentials : true}
-            })
-            .then((response)=>{
-                console.log(response);
-                fetchProjectList();
-            })
-            .catch((err) => {
-                console.log("hemlo")
-                console.log(err);
-            });
-    };
+    // function handleDeleteEvent(id) {
+    //     axios
+    //         .delete("http://localhost:3000/keepTrack/project/"+ id +"/", {
+    //             headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+    //             params: {withCredentials : true}
+    //         })
+    //         .then((response)=>{
+    //             console.log(response);
+    //             fetchProjectList();
+    //         })
+    //         .catch((err) => {
+    //             console.log("hemlo")
+    //             console.log(err);
+    //         });
+    // };
 
     function callFetchFunction (a) {
         if(a===true){
@@ -73,8 +74,8 @@ const Project = () => {
     const members = users.map((user)=>({
         key : user.id,
         value : user.id,
-        label : user.username,
-        text : user.username
+        label : user.name,
+        text : user.name
     }))
     
     function getMembers(members_p){
@@ -82,7 +83,7 @@ const Project = () => {
         members_p.map(user =>{
             users.map(item=>{
                 if(item.id==user){
-                    memberList.push(item.username)
+                    memberList.push(item.name)
                 }
             })
         })
@@ -182,9 +183,10 @@ const Project = () => {
                                 </Card.Description>
                                 <br></br>
                                 <EditProject Proj = {project} usersAll = {users} projectId = {project.id} refreshProjectList = {emptyTheEdit}/>
-                                <Button className='edit-delete' floated='right'basic color='red' onClick={() => handleDeleteEvent(project.id)}>
+                                {/* <Button className='edit-delete' floated='right'basic color='red' onClick={() => handleDeleteEvent(project.id)}>
                                     <Icon name='dont' />Delete
-                                </Button>
+                                </Button> */}
+                                <DeletePopUp type ='project' id = {project.id} refreshProjectList = {emptyTheEdit}/>
                                 </div>
                             </Card.Content>
                             </Card>

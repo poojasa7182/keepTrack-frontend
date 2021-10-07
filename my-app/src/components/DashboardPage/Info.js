@@ -7,6 +7,7 @@ import imgLoad from './route (1).png'
 import './temp4.css'
 import EditCard from '../Cards/editcards'
 import Avatar from 'react-avatar';
+import DeletePopUp from '../extra/deletePopup'
 
 const UserInfo = () => {
     
@@ -66,21 +67,21 @@ const UserInfo = () => {
         fetchUserList();
     }, []);
     
-    function handleDeleteEvent(id) {
-        axios
-            .delete("http://localhost:3000/keepTrack/card/"+ id +"/", {
-                headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
-                params: {withCredentials : true}
-            })
-            .then((response)=>{
-                console.log(response);
-                fetchUsercards();
-            })
-            .catch((err) => {
-                console.log("hemlo")
-                console.log(err);
-            });
-    };
+    // function handleDeleteEvent(id) {
+    //     axios
+    //         .delete("http://localhost:3000/keepTrack/card/"+ id +"/", {
+    //             headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+    //             params: {withCredentials : true}
+    //         })
+    //         .then((response)=>{
+    //             console.log(response);
+    //             fetchUsercards();
+    //         })
+    //         .catch((err) => {
+    //             console.log("hemlo")
+    //             console.log(err);
+    //         });
+    // };
 
     const callFetchFunction=(a)=>{
         if(a===true){
@@ -148,9 +149,10 @@ const UserInfo = () => {
                                         <Card.Content extra>
                                             <div className='card-content-extra-i'>
                                             <EditCard page={1} card = {card} users = {users} project_name={card.project_c.project_name} list_name={card.list_c.list_name} refreshProjectList = {callFetchFunction}/>
-                                            <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
+                                            {/* <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
                                                 <Icon name='dont' />Delete
-                                            </Button> 
+                                            </Button>  */}
+                                            <DeletePopUp type='card' id = {card.id} refreshProjectList = {callFetchFunction}/>
                                             </div>
                                         </Card.Content>
                                         <Card.Content className='user-card-description'>

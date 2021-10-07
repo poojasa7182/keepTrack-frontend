@@ -50,7 +50,7 @@ const EditList = (props) => {
     return(
         <div>
         <Popup
-            trigger={<Button className='edit-delete' floated='left' color='yellow' basic circular>
+            trigger={<Button className='edit-delete' floated='left' color='yellow' basic >
             <Icon name='edit' /> Edit
         </Button>}
             modal

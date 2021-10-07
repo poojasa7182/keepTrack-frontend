@@ -62,8 +62,8 @@ const AddCard = (props) => {
     const members = props.users.map((user)=>({
         key : user.id,
         value : user.id,
-        label : user.username,
-        text : user.username,
+        label : user.name,
+        text : user.name,
     }))
 
     const handleFormSubmit = () => {

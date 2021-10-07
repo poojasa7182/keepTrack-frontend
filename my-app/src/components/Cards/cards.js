@@ -7,6 +7,7 @@ import { Redirect, NavLink } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import AddCard from './addcards'
 import EditCard from './editcards';
+import DeletePopUp from '../extra/deletePopup'
 // import AddProject from './addProject'
 // import EditProject from './editProject'
 // import AddList from '../Lists/addList';
@@ -66,21 +67,21 @@ const ListCard = () => {
         fetchCardsOfLists();
     }, []);
 
-    function handleDeleteEvent(id) {
-        axios
-            .delete("http://localhost:3000/keepTrack/card/"+ id +"/", {
-                headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
-                params: {withCredentials : true}
-            })
-            .then((response)=>{
-                console.log(response);
-                fetchCardsOfLists();
-            })
-            .catch((err) => {
-                console.log("hemlo")
-                console.log(err);
-            });
-    };
+    // function handleDeleteEvent(id) {
+    //     axios
+    //         .delete("http://localhost:3000/keepTrack/card/"+ id +"/", {
+    //             headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+    //             params: {withCredentials : true}
+    //         })
+    //         .then((response)=>{
+    //             console.log(response);
+    //             fetchCardsOfLists();
+    //         })
+    //         .catch((err) => {
+    //             console.log("hemlo")
+    //             console.log(err);
+    //         });
+    // };
 
     function callFetchFunction (a) {
         if(a===true){
@@ -109,8 +110,8 @@ const ListCard = () => {
     const members = users.map((user)=>({
         key : user.id,
         value : user.id,
-        label : user.username,
-        text : user.username
+        label : user.name,
+        text : user.name
     }))
     
     function getMembers(members_p){
@@ -118,7 +119,7 @@ const ListCard = () => {
         members_p.map(user =>{
             users.map(item=>{
                 if(item.id==user){
-                    memberList.push(item.username)
+                    memberList.push(item.name)
                 }
             })
         })
@@ -188,9 +189,10 @@ const ListCard = () => {
                                 </Card.Description>
                                 <br></br>
                                 <EditCard page={1} card = {card} users = {users} project_name={curProject.project_name} list_name={curList.list_name} refreshProjectList = {callFetchFunction}/>
-                                <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
+                                {/* <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
                                     <Icon name='dont' />Delete
-                                </Button> 
+                                </Button>  */}
+                                <DeletePopUp type='card' id = {card.id} refreshProjectList = {callFetchFunction}/>
                                 </div>
                             </Card.Content>
                             </Card>
