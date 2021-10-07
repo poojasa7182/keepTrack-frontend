@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import Home from './components/Login/home';
+import Login from './components/Login/login';
 import ProjectPage from './components/ProjectPage/ProjectPage';
 import DashBoardPage from './components/DashboardPage/dashBoardPage';
 import ListPage from './components/Lists/ListPage';
@@ -15,6 +16,9 @@ function App() {
     <div className="App">
       <Route exact path="/">
         < Home />
+      </Route>
+      <Route exact path="/login">
+        < Login />
       </Route>
       <Route exact path="/logout">
         < Logout />

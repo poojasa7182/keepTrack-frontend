@@ -11,6 +11,8 @@ import Cookies, { set } from 'js-cookie';
 import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 import { MultiSelect } from "react-multi-select-component";
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 const EditProject = (props) => {
     var allUsers = props.usersAll
@@ -31,26 +33,31 @@ const EditProject = (props) => {
     // const config = {
 	// 	readonly: false // all options from https://xdsoft.net/jodit/doc/
 	// }
+    var start_date1 = new Date(start_date)
+    var due_date1 = new Date(due_date)
 
     const handleStatusChange = (event, data) => {
-        // console.log(is_completed)
         console.log(start_date)
         setis_completed(!is_completed);
     }
-    // const handleSDateChange = (event, data) => {
-    //     setStart_date(data.value);
-    //     var newdaa = new Date();
-    //     newdaa = start_date;
-    // }
-    // const handleInfoChange = (e) =>{
-    //     setProjectInfo(e.value);
-    // }
-    const handleSDateChange = (e) => {
-        console.log(e)
-        // const {value} = e.target;
-        // setStart_date(value);
+    
+    const handleSDateChange = (event, data) =>{ 
+        var temp = data.value.toISOString()
+        var isoDateTime = new Date(temp)
+        var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
+        var toSet = localDateTime.slice(6,10) + '-' + localDateTime.slice(3,5)+ '-' + localDateTime.slice(0,2);
+        setStart_date(toSet);
+        start_date1 = new Date(start_date)
     }
-    const handleDDateChange = (event, data) => setDue_date(data.value);
+    const handleDDateChange = (event, data) =>{ 
+        var temp = data.value.toISOString()
+        var isoDateTime = new Date(temp)
+        var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
+        var toSet = localDateTime.slice(6,10) + '-' + localDateTime.slice(3,5)+ '-' + localDateTime.slice(0,2);
+        setDue_date(toSet);
+        due_date1 = new Date(due_date)
+    }
+    
 
     var handleMembersChange = (e) => {
         var temp = [];
@@ -63,7 +70,6 @@ const EditProject = (props) => {
         var temp = [];
         for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
         setProject_admins(temp)
-        //setProject_admins(e.key)
         projAdmin = e;
     }
 
@@ -143,41 +149,8 @@ const EditProject = (props) => {
                         onChange= {(e) => setProjectInfo(e.target.value)} />
 
                     <Form.Group widths='equal'>
-
-                        {/* <DateTimeInput 
-                        placeholder='Start Date'
-                        name='start_date'
-                        width={8}
-                        value={start_date}
-                        onChange={handleSDateChange} /> */}
-                        
-                        {/* <Datetime
-                        placeholder='Start Date'
-                        name='start_date'
-                        width={8}
-                        value = {start_date}
-                        timeFormat = {true}
-                        onChange={handleSDateChange}
-                        />
-                        <Datetime
-                        placeholder='Due/End Date'
-                        name='due_date'
-                        width={8}
-                        value={due_date}
-                        onChange={handleDDateChange}
-                        timeFormat = {true}
-                        /> */}
-                        <DateTimeInput 
-                        placeholder='Start Date'
-                        name='start_date'
-                        value = {start_date}
-                        onChange={handleSDateChange}/>
-                        <DateTimeInput 
-                        placeholder='Due/End Date'
-                        name='due_date'
-                        value={due_date}
-                        onChange={handleDDateChange} />
-
+                        <SemanticDatepicker value={start_date1} label='Start-date' onChange={handleSDateChange} />
+                        <SemanticDatepicker value={due_date1} label='Due-date' onChange={handleDDateChange} />
                     </Form.Group>
 
                     <TextArea 
@@ -205,21 +178,6 @@ const EditProject = (props) => {
                     onChange={handleStatusChange}
                     />
                     
-                    {/* <Select
-                        placeholder='Members'
-                        isMulti
-                        isSearchable
-                        options={members}
-                        onChange={handleMembersChange}
-                    ></Select>
-                    <br></br>
-                    <Select
-                        placeholder='Project Admins'
-                        isMulti
-                        isSearchable
-                        options={members}
-                        onChange={handleProjAdminsChange}
-                    ></Select> */}
                     <MultiSelect
                         options={members}
                         value={projMem}

@@ -10,6 +10,8 @@ import Datetime from 'react-datetime';
 import Cookies from 'js-cookie';
 import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
+import SemanticDatepicker from 'react-semantic-ui-datepickers';
+import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 
 const AddProject = (props) => {
     const [projectInfo, setProjectInfo] = React.useState({
@@ -46,31 +48,34 @@ const AddProject = (props) => {
         setis_completed(!is_completed);
         
     }
-    // const handleSDateChange = (event, data) => {
-    //     setStart_date(data.value);
-    //     var newdaa = new Date();
-    //     newdaa = start_date;
-    // }
-    const handleSDateChange = (e) => {
-        console.log(e)
-        // const {value} = e.target;
-        // setStart_date(value);
+    
+    const handleSDateChange = (event, data) =>{ 
+        var temp = data.value.toISOString()
+        console.log(data.value)
+        var isoDateTime = new Date(temp)
+        var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
+        var toSet = localDateTime.slice(6,10) + '-' + localDateTime.slice(3,5)+ '-' + localDateTime.slice(0,2);
+        setStart_date(toSet);
     }
-    const handleDDateChange = (event, data) => setDue_date(data.value);
+    const handleDDateChange = (event, data) =>{ 
+        var temp = data.value.toISOString()
+        var isoDateTime = new Date(temp)
+        var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
+        var toSet = localDateTime.slice(6,10) + '-' + localDateTime.slice(3,5)+ '-' + localDateTime.slice(0,2);
+        setDue_date(toSet);
+    }
+    
 
     var handleMembersChange = (e) => {
         var temp = [];
         for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
         setMembers_p(temp)
-        // console.log(members_p.type)
-        // console.log(members_p)
     }
 
     const handleProjAdminsChange = (e) => {
         var temp = [];
         for(var i = 0 ; i < e.length ; i++) temp.push(e[i].key)
         setProject_admins(temp)
-        //setProject_admins(e.key)
     }
     
     async function fetchUserList() {
@@ -153,25 +158,8 @@ const AddProject = (props) => {
                         onChange={handleInfoChange} />
 
                     <Form.Group widths='equal'>
-
-                        {/* <DateTimeInput 
-                        placeholder='Start Date'
-                        name='start_date'
-                        width={8}
-                        value={start_date}
-                        onChange={handleSDateChange} /> */}
-                        
-                        <DateTimeInput 
-                        placeholder='Start Date'
-                        name='start_date'
-                        value = {start_date}
-                        onChange={handleSDateChange}/>
-                        <DateTimeInput 
-                        placeholder='Due/End Date'
-                        name='due_date'
-                        value={due_date}
-                        onChange={handleDDateChange} />
-
+                        <SemanticDatepicker label='Start-date' onChange={handleSDateChange} />
+                        <SemanticDatepicker label='Due-date' onChange={handleDDateChange} />
                     </Form.Group>
 
                     <TextArea 
@@ -197,7 +185,6 @@ const AddProject = (props) => {
                     label='Complete?'
                     onChange={handleStatusChange}
                     />
-                    
                     <Select
                         placeholder='Members'
                         isMulti

@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Image, Segment } from 'semantic-ui-react';
+import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Image, Segment, Label } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { Redirect, NavLink } from 'react-router-dom';
@@ -102,8 +102,10 @@ const UserInfo = () => {
             </div>
             <div className="infoBox">
                 <Card className='card-info'>
+                    {(userInfo.banned)?(<Label attached='bottom right'  size='huge' color='red'>Disabled</Label>):(<div></div>)}                   
+                    {(userInfo.is_admin)?(<Label attached='top right'  size='huge' color='green'>Admin</Label>):(<div></div>)}                   
                     <Card.Content>
-                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src='' round={true} size={180} textSizeRatio={1} /> &nbsp;
+                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src='' round={true} size={180} textSizeRatio={1.75} /> &nbsp;
                         {/* <Image floated='left' circular src='https://channeli.in/media/maintainer_site/normie_image/bfd02081-129d-470e-988a-949f6a0a5894.png' size='small'  /> */}
                         <div className='card-header-i' >
                             {userInfo.name} 

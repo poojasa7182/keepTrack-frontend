@@ -36,19 +36,19 @@ class Login extends React.Component{
                         
         // console.log(user1)
         //var csrftoken = getCookie('csrftoken');
-        // axios
-        //     .get("http://127.0.0.1:3000/keepTrack/login", {
-        //         params: {code:auth, withCredentials : true}
-        //     })
-        //     .then((response)=>{
-        //         console.log(response);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-        // // const user1= await axios({url:'http://127.0.0.1:8000/keepTrack/betw' ,method:'GET', params: {code:auth} , withCredentials:true} ).then(console.log("done"));
-        // // console.log(user1)
-        // await this.setState({loggedIn:true});
+        axios
+            .get("http://127.0.0.1:3000/keepTrack/betw", {
+                params: {code:auth, withCredentials : true}
+            })
+            .then((response)=>{
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        // const user1= await axios({url:'http://127.0.0.1:8000/keepTrack/betw' ,method:'GET', params: {code:auth} , withCredentials:true} ).then(console.log("done"));
+        // console.log(user1)
+        await this.setState({loggedIn:true});
     }
 
     render(){

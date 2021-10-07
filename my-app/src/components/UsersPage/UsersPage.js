@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 const UsersPage = () => {
     let history = useHistory();
-
+    var user;
     async function fetchUserDetails(){
         axios
             .get('http://localhost:3000/keepTrack/user/info', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
