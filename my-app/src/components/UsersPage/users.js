@@ -1,8 +1,8 @@
-import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Image, Segment, CardContent, Label } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Card, Grid, Label } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './temp5.css'
 import Avatar from 'react-avatar';
 
@@ -93,7 +93,7 @@ const Users = () => {
                                     <Card as={NavLink} to={'user/'+user.id+'/details'} key={user.id} className="user-cards-uu" inverted>
                                         <Label attached='top left' circular size='large' color='green'>Admin</Label>
                                         {(user.banned)?(<Label attached='top left'  size='medium' color='red'>Disabled</Label>):(<div></div>)}
-                                        <Avatar name = {user.name} src='' round={true} className='avatar-uu'/>
+                                        <Avatar name = {user.name} src={user.profilePic} round={true} className='avatar-uu'/>
                                         <div  className='header-uu'>{user.name}</div>  
                                         <div  className='meta-uu'>({user.username})</div> 
                                         <div  className='detail-uu'>{user.details}</div>
@@ -109,7 +109,7 @@ const Users = () => {
                                     <Card as={NavLink} to={'user/'+user.id+'/details'} key={user.id} className="user-cards-uu" inverted>
                                         <Label attached='top left' circular size='large' color='blue'>User</Label>
                                         {(user.banned)?(<div><Label attached='top right' size='medium' color='red'>Disabled</Label></div>):(<div></div>)}
-                                        <Avatar name = {user.name} src='' round={true} className='avatar-uu'/>
+                                        <Avatar name = {user.name} src={user.profilePic} round={true} className='avatar-uu'/>
                                         <div  className='header-uu'>{user.name}</div>  
                                         <div  className='meta-uu'>({user.username})</div> 
                                         <div  className='detail-uu'>{user.details}</div>
@@ -126,7 +126,7 @@ const Users = () => {
                                         <Label attached='top left' circular size='large' color='green'>Admin</Label>
                                         {(user.banned)?(<div><Label attached='top right' size='medium' color='red'>Disabled</Label></div>):(<div></div>)}
                                         <Card.Content as={NavLink} to={'user/'+user.id+'/details'} className="user-cards-uu-2">
-                                        <Avatar name = {user.name} src='' round={true} className='avatar-uu'/>
+                                        <Avatar name = {user.name} src={user.profilePic} round={true} className='avatar-uu'/>
                                         <div  className='header-uu'>{user.name}</div>  
                                         <div  className='meta-uu'>({user.username})</div> 
                                         <div  className='detail-uu'>{user.details}</div>
@@ -146,7 +146,7 @@ const Users = () => {
                                         <Label attached='top left' circular size='large' color='blue'>User</Label>
                                         {(user.banned)?(<div><Label attached='top right' size='medium' color='red'>Disabled</Label></div>):(<div></div>)}
                                         <Card.Content as={NavLink} to={'user/'+user.id+'/details'} className="user-cards-uu-2">
-                                        <Avatar name = {user.name} src='' round={true} className='avatar-uu'/>
+                                        <Avatar name = {user.name} src={user.profilePic} round={true} className='avatar-uu'/>
                                         <div  className='header-uu'>{user.name}</div>  
                                         <div  className='meta-uu'>({user.username})</div> 
                                         <div  className='detail-uu'>{user.details}</div>

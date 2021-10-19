@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 const ProjectPage = () => {
     let history = useHistory();
-
+    var user ;
     async function fetchUserDetails(){
         axios
             .get('http://localhost:3000/keepTrack/user/info', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
@@ -16,6 +16,7 @@ const ProjectPage = () => {
                 if(response.data.banned){
                     history.push("/");
                 }
+                user = response.data
             })
             .catch((error) => {
                 history.push("/");
@@ -34,7 +35,7 @@ const ProjectPage = () => {
                     <SidebarMenu />
                 </div>
                 <div className='projectsContainer'>
-                    <Project />
+                    <Project curUser={user} />
                 </div>
             </div>
             <div className='footer'>

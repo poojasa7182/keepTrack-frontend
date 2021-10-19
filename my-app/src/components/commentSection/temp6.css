@@ -1,0 +1,38 @@
+.comment-box-comments{
+    height: 50%;
+    overflow-y: scroll;
+}
+
+.card-popup-modal-comments{
+    width: 40vw !important;
+    height: 80vh;
+}
+
+.flex-div-comment-right{
+    background: rgba(29, 153, 76, 0.178);
+    border-radius: 10px;
+    margin: 1% 0% 0%;
+    display: flex;
+}
+
+.flex-div-comment-left{
+    background: rgba(0, 0, 0, 0.075);
+    border-radius: 10px;
+    margin: 1% 0% 0%;
+    display: flex;
+}
+
+.comment-content{
+    margin-left: 2%;
+}
+
+.time-comment{
+    color: rgba(95, 91, 91, 0.651);
+    font-size: 0.75em;
+    align-self: flex-end;
+}
+
+.button-bottom{
+    margin-right: 2% !important;
+    margin-bottom: 1% !important;
+}

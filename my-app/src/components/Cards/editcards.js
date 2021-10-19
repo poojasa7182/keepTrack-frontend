@@ -1,14 +1,8 @@
-import React, {useRef} from 'react';
-import Select from 'react-select'
+import React from 'react';
 import './temp3.css';
-import { Form, Checkbox, Button, TextArea, Icon, Card } from 'semantic-ui-react';
-import { DateTimeInput } from 'semantic-ui-calendar-react';
+import { Form, Checkbox, Button, TextArea, Icon, Modal, Dropdown } from 'semantic-ui-react';
 import axios from "axios";
-import JoditEditor from "jodit-react";
-import dateFormat from 'dateformat';
-import Datetime from 'react-datetime';
-import Cookies, { set } from 'js-cookie';
-import { Redirect } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import Popup from 'reactjs-popup';
 import { MultiSelect } from "react-multi-select-component";
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
@@ -27,7 +21,11 @@ const EditCard = (props) => {
     const [due_date, setDue_date] = React.useState(curCard.due_date);
     const [members_c, setMembers_c] = React.useState(curCard.members_c);
     const [description, setDescription] = React.useState(curCard.description);
-    
+    const [open, setOpen] = React.useState(false);
+    const [messageNo, setNum] = React.useState(-1);
+    const [lists, setLists] = React.useState(props.lists);
+    const [list, setList] = React.useState(curCard.list_c.id);
+
     const handleInfoChange = (e) => {
         const {name,value} = e.target;
         setCardInfo((prevValue)=>({
@@ -42,6 +40,10 @@ const EditCard = (props) => {
     }
 
     const handleSDateChange = (event, data) =>{ 
+        if(data.value===null){
+            setStart_date('')
+            return
+        } 
         var temp = data.value.toISOString()
         var isoDateTime = new Date(temp)
         var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
@@ -50,6 +52,10 @@ const EditCard = (props) => {
         start_date1 = new Date(start_date)
     }
     const handleDDateChange = (event, data) =>{ 
+        if(data.value===null){
+            setDue_date('')
+            return
+        }
         var temp = data.value.toISOString()
         var isoDateTime = new Date(temp)
         var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
@@ -65,10 +71,22 @@ const EditCard = (props) => {
         cardMem = e;
     }
 
-    React.useEffect(()=>{
-        
-    }, []);
+    const setAllFields = () =>{
+        setCardInfo((prevValue)=>({
+            ...prevValue,
+            card_name : curCard.card_name,
+        }));
+        setis_completed(curCard.is_completed)
+        setStart_date(curCard.start_date)
+        setDue_date(curCard.due_date)
+        setMembers_c(curCard.members_c)
+        setDescription(curCard.description)
+    }
 
+    React.useEffect(()=>{
+        setLists(props.lists)
+    }, []);
+      
     const members = props.users.map((user)=>({
         key : user.id,
         value : user.id,
@@ -79,6 +97,13 @@ const EditCard = (props) => {
     var cardMem = members.filter(mem => members_c.indexOf(mem.key)>-1);
 
     const handleFormSubmit = () => {
+
+        if(cardInfo.card_name===''||start_date===''||due_date===''||description===''){
+            setNum(1);
+            setOpen(true)
+            return;
+        }
+
         const data = {
             card_name : cardInfo.card_name,
             start_date : start_date,
@@ -87,8 +112,18 @@ const EditCard = (props) => {
             is_completed : is_completed,
             members_c : members_c,
             project_c : curCard.project_c.id,
-            list_c : curCard.list_c.id
+            list_c : list
         };
+
+        var date1 = new Date(start_date)
+        var date2 = new Date(due_date)
+
+        if(date1-date2>0){
+            setNum(2)
+            setOpen(true)
+            return
+        }
+
         console.log(data)
         axios
             .put("http://localhost:3000/keepTrack/card/"+curCard.id+'/',data, {
@@ -100,9 +135,15 @@ const EditCard = (props) => {
                 props.refreshProjectList(true);
             })
             .catch((err) => {
+                setNum(3);
+                setOpen(true)
                 console.log("hemlo")
                 console.log(err);
             });
+    }
+
+    const handleListChange = (event,data) => {
+        setList(data.value)
     }
 
     return(
@@ -115,8 +156,24 @@ const EditCard = (props) => {
             className="temp"
             nested>
                 
-{close => (
+        {close => (
             <div className="editCardPopUp"> 
+                <Modal
+                     onClose={() => setOpen(false)}
+                     onOpen={() => setOpen(true)}
+                     open={open}
+                >
+                    <Modal.Content>
+                        {
+                            (messageNo===2)?('Due date cannot be smaller than start date of project!')
+                            :((messageNo===1)?('Please fill all the fields'):('Please enter a unique card name'))
+                        }
+                        
+                    </Modal.Content>
+                    <Button color='black' onClick={() => setOpen(false)}>
+                        Ok
+                    </Button>
+                </Modal>
                 <Form className='form-popup-c'>
                     <Form.Input 
                         placeholder='Card title' 
@@ -125,7 +182,7 @@ const EditCard = (props) => {
                         value={cardInfo.card_name}
                         onChange={handleInfoChange} />
 
-                    <Form.Group widths='equal'>
+                    <Form.Group widths={2}>
                         <SemanticDatepicker value={start_date1} label='Start-date' onChange={handleSDateChange} />
                         <SemanticDatepicker value={due_date1} label='Due-date' onChange={handleDDateChange} />
                     </Form.Group>
@@ -151,18 +208,24 @@ const EditCard = (props) => {
                         labelledBy="Assignees"
                     />
                     <br></br>
+                    <Dropdown
+                        placeholder='Select List'
+                        fluid
+                        selection
+                        // loading={true}
+                        // loading={(props.lists===[])?(true):(false)}
+                        value = {list}
+                        options={lists}
+                        onChange={(event,data)=> handleListChange(event,data)}
+                    />
+                    <br></br>
                     <Form.Input 
                         placeholder='Project Name' 
                         width={16}
                         name='project_name'
                         value={props.project_name}
                     />
-                    <Form.Input 
-                        placeholder='List Name' 
-                        width={16}
-                        name='list_name'
-                        value={props.list_name}
-                    />
+
                     <div className='flex-div'>
                     <Button 
                         color='teal'
@@ -173,7 +236,7 @@ const EditCard = (props) => {
                         }}>Update Card</Button>
                     </div>
                 </Form>
-                <button onClick={close} className="button-close-c">
+                <button onClick={() =>{close();setAllFields()}} className="button-close-c">
                 <Icon name='close' color='red' size='big'/>
                 </button>
             </div>

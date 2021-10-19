@@ -1,9 +1,8 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import './temp1.css';
-import { Form, Checkbox, Button, TextArea, Menu, Icon } from 'semantic-ui-react';
+import { Form, Checkbox, Button, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
 
 const AddList = (props) => {
@@ -33,6 +32,10 @@ const AddList = (props) => {
             is_completed : is_completed,
             project_l : project_id
         };
+        if(listInfo.list_name===''){
+            alert('Please enter list name!!')
+            return
+        }
         setListInfo((prevValue)=>({
             ...prevValue,
             list_name:'',
@@ -48,6 +51,7 @@ const AddList = (props) => {
                 props.refreshProjectList(true);
             })
             .catch((err) => {
+                // alert('Please enter a unique list name!!')
                 console.log(err);
             });
     }

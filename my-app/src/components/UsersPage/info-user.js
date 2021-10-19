@@ -1,8 +1,8 @@
-import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Image, Segment, Label } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Card, Menu, Grid, Segment, Label, Accordion, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import Avatar from 'react-avatar';
 
 const UserInfo = () => {
@@ -12,6 +12,7 @@ const UserInfo = () => {
     const [menu, setMenu] = React.useState('cards');
     const [userCards, setUserCards] = React.useState([]);
     const [userProjects, setUserProjects] = React.useState([]);
+    const [activeIndex, setActiveIndex] = React.useState(-1);
 
     const handleMenuChange = (e,{name}) => {
         setMenu(name)
@@ -53,6 +54,16 @@ const UserInfo = () => {
         fetchUserDetails();
     }, []);
 
+    const handleClickDesc = (e,titleProps) =>{
+        const { index } = titleProps
+        const newIndex = activeIndex === index ? -1 : index
+        setActiveIndex(newIndex);
+    }
+
+    const createMarkup = (content) => {
+        return {__html: content};
+    }
+
     return(
         <div className='container-dashboard'>
             <div className='header-i'>
@@ -65,9 +76,9 @@ const UserInfo = () => {
             <div className="infoBox">
                 <Card className='card-info'>
                     {(userInfo.banned)?(<Label attached='bottom right'  size='huge' color='red'>Disabled</Label>):(<div></div>)}                   
-                    {(userInfo.is_admin)?(<Label attached='top right'  size='huge' color='green'>Admin</Label>):(<div></div>)}                   
+                    {(userInfo.is_admin)?(<Label attached='top right'  size='huge' color='green'>Admin</Label>):(<Label attached='top right'  size='huge' color='blue'>User</Label>)}                   
                     <Card.Content>
-                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src='' round={true} size={180} textSizeRatio={1.75} /> &nbsp;
+                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src={userInfo.profilePic} round={true} size={180} textSizeRatio={1.75} /> &nbsp;
                         <div className='card-header-i' >
                             {userInfo.name} 
                         </div>
@@ -110,9 +121,9 @@ const UserInfo = () => {
                                             </div>
                                         </Card.Content>
                                         <Card.Content className='user-card-description'>
-                                            <Button color='teal' as={NavLink} to={'project/'+card.project_c.id+'/lists'}><strong>Project : </strong>{card.project_c.project_name}</Button>
+                                            <Button color='teal' as={NavLink} to={'../../../project/'+card.project_c.id+'/lists'}><strong>Project : </strong>{card.project_c.project_name}</Button>
                                             <br></br>
-                                            <Button color='teal' as={NavLink} to={'project/'+card.project_c.id+'/list/'+card.list_c.id+'/cards'}><strong>list : </strong>{card.list_c.list_name}</Button>
+                                            <Button color='teal' as={NavLink} to={'../../../project/'+card.project_c.id+'/list/'+card.list_c.id+'/cards'}><strong>List : </strong>{card.list_c.list_name}</Button>
                                         </Card.Content>
                                     </Card>
                             )})}
@@ -124,10 +135,25 @@ const UserInfo = () => {
                             {userProjects.map(function(card){
                                 return(
                                     <Card key= {card.id} className={(card.is_completed)?'card-green-i':'card-red-i'}>
-                                        <Button color='teal' as={NavLink} to={'project/'+card.id+'/lists'}>View project</Button>
+                                        <Button color='teal' as={NavLink} to={'../../project/'+card.id+'/lists'}>View project</Button>
                                         <br></br>
                                         <Card.Header className='user-card-header'>{card.project_name}</Card.Header>
-                                        <Card.Description>{card.wiki}</Card.Description>
+                                        <Accordion>
+                                            <Accordion.Title
+                                                active = {activeIndex==card.id}
+                                                index = {card.id}
+                                                onClick={handleClickDesc}
+                                                className='desc-accordion'
+                                            >
+                                                <Icon name='dropdown' />
+                                            <strong>Description:</strong> 
+                                            </Accordion.Title>
+                                            <Accordion.Content active={activeIndex === card.id}>
+                                                <Card.Description className='desc-accordion' dangerouslySetInnerHTML={createMarkup(card.wiki)}>
+                                                {/* {project.wiki} */}
+                                                </Card.Description>
+                                            </Accordion.Content>
+                                        </Accordion>
                                     </Card>
                             )})}
                             </Grid>

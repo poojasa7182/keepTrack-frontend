@@ -1,8 +1,8 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import './temp1.css';
-import { Form, Checkbox, Button, TextArea, Icon } from 'semantic-ui-react';
+import { Form, Checkbox, Button, Icon } from 'semantic-ui-react';
 import axios from "axios";
-import Cookies, { set } from 'js-cookie';
+import Cookies from 'js-cookie';
 import Popup from 'reactjs-popup';
 
 const EditList = (props) => {
@@ -26,6 +26,14 @@ const EditList = (props) => {
         setis_completed(!is_completed);
     }
     
+    const setAllFields = () => {
+        setListInfo((prevValue)=>({
+            ...prevValue,
+            list_name:list.list_name,
+        }));
+        setis_completed(!is_completed);
+    }
+
     const handleFormSubmit = () => {
 
         const data = {
@@ -33,6 +41,11 @@ const EditList = (props) => {
             is_completed : is_completed,
             project_l : list.project_l
         };
+
+        if(listInfo.list_name===''){
+            alert('Please enter list name!!')
+            return
+        }
 
         axios
             .put("http://localhost:3000/keepTrack/list/"+list.id+"/",data, {
@@ -43,6 +56,7 @@ const EditList = (props) => {
                 props.refreshProjectList(true);
             })
             .catch((err) => {
+                alert('Please enter a unique list name!!')
                 console.log(err);
             });
     }
@@ -94,7 +108,7 @@ const EditList = (props) => {
                         }}>Update List</Button>
                     </div>
                 </Form>
-                <button onClick={close} className="button-close">
+                <button onClick={() =>{close(); setAllFields()}} className="button-close">
                 <Icon name='close' color='red' size='big'/>
                 </button>
             </div>

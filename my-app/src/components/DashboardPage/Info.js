@@ -1,9 +1,8 @@
-import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Image, Segment, Label } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Card, Menu, Grid, Segment, Label, Accordion, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
-import imgLoad from './route (1).png'
+import { NavLink } from 'react-router-dom';
 import './temp4.css'
 import EditCard from '../Cards/editcards'
 import Avatar from 'react-avatar';
@@ -16,7 +15,8 @@ const UserInfo = () => {
     const [userCards, setUserCards] = React.useState([]);
     const [userProjects, setUserProjects] = React.useState([]);
     const [users, setUsers] = React.useState([]);
-    
+    const [activeIndex, setActiveIndex] = React.useState(-1);
+
     async function fetchUserList() {
         await axios
             .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
@@ -91,6 +91,16 @@ const UserInfo = () => {
         return
     }
 
+    const handleClickDesc = (e,titleProps) =>{
+        const { index } = titleProps
+        const newIndex = activeIndex === index ? -1 : index
+        setActiveIndex(newIndex);
+    }
+
+    const createMarkup = (content) => {
+        return {__html: content};
+    }
+
     return(
         <div className='container-dashboard'>
             <div className='header-i'>
@@ -105,7 +115,7 @@ const UserInfo = () => {
                     {(userInfo.banned)?(<Label attached='bottom right'  size='huge' color='red'>Disabled</Label>):(<div></div>)}                   
                     {(userInfo.is_admin)?(<Label attached='top right'  size='huge' color='green'>Admin</Label>):(<div></div>)}                   
                     <Card.Content>
-                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src='' round={true} size={180} textSizeRatio={1.75} /> &nbsp;
+                    <Avatar className='avtar-info' value={userInfo.name} name={userInfo.name} src={userInfo.profilePic} round={true} size={180} textSizeRatio={1.75} /> &nbsp;
                         {/* <Image floated='left' circular src='https://channeli.in/media/maintainer_site/normie_image/bfd02081-129d-470e-988a-949f6a0a5894.png' size='small'  /> */}
                         <div className='card-header-i' >
                             {userInfo.name} 
@@ -175,7 +185,22 @@ const UserInfo = () => {
                                         <Button color='teal' as={NavLink} to={'project/'+card.id+'/lists'}>View project</Button>
                                         <br></br>
                                         <Card.Header className='user-card-header'>{card.project_name}</Card.Header>
-                                        <Card.Description>{card.wiki}</Card.Description>
+                                        <Accordion>
+                                            <Accordion.Title
+                                                active = {activeIndex==card.id}
+                                                index = {card.id}
+                                                onClick={handleClickDesc}
+                                                className='desc-accordion'
+                                            >
+                                                <Icon name='dropdown' />
+                                            <strong>Description:</strong> 
+                                            </Accordion.Title>
+                                            <Accordion.Content active={activeIndex === card.id}>
+                                                <Card.Description className='desc-accordion' dangerouslySetInnerHTML={createMarkup(card.wiki)}>
+                                                {/* {project.wiki} */}
+                                                </Card.Description>
+                                            </Accordion.Content>
+                                        </Accordion>
                                     </Card>
                             )})}
                             </Grid>

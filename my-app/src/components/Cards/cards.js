@@ -1,9 +1,9 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import './temp3.css';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Loader } from 'semantic-ui-react';
+import { Card, Grid, Loader } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import AddCard from './addcards'
 import EditCard from './editcards';
@@ -12,15 +12,19 @@ import DeletePopUp from '../extra/deletePopup'
 // import EditProject from './editProject'
 // import AddList from '../Lists/addList';
 import Member from '../ProjectPage/member2'
-const ListCard = () => {
+import CommentBox from '../commentSection/commentBox';
+
+const ListCard = (props) => {
     const params = useParams();
     const listId = params.listId
     const projectId = params.projectId
+    const curUser = props.user
     const [curProject, setCurProject] = React.useState('');
     const [curList, setCurList] = React.useState('');
     const [cards, setCards] = React.useState([]);
     const [users, setUsers] = React.useState([]);
-    
+    const [lists, setLists] = React.useState([]);
+
     async function fetchUserList() {
         await axios
             .get('http://localhost:3000/keepTrack/user/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
@@ -47,7 +51,6 @@ const ListCard = () => {
             .get('http://localhost:3000/keepTrack/list/'+listId+'/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 setCurList(response.data)
-                // fetchListsOfproject();
             })
             .catch((error) => console.log(error));
     }
@@ -57,31 +60,39 @@ const ListCard = () => {
             .get('http://localhost:3000/keepTrack/list/'+listId+'/cards', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
                 setCards(response.data)
-                console.log(response.data)
+            })
+            .catch((error) => console.log(error));
+    } 
+
+    function fetchListsOfproject() {
+        axios
+            .get('http://localhost:3000/keepTrack/project/'+projectId+'/list', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
+            .then((response) => {
+                fetchUserList();
+                // console.log(response.data.list_name)
+                let user_list=[];
+                // console.log("hi")
+                const users=response.data;
+                
+                for(let u in users){
+                    let dict = {};
+                    dict["key"] = users[u]["id"];
+                    dict["value"] = users[u]["id"];
+                    // dict["label"] = users[u]["list_name"];
+                    dict["text"] = users[u]["list_name"];
+
+                    user_list.push(dict);
+                }
+                setLists(user_list)
             })
             .catch((error) => console.log(error));
     }
 
+
     React.useEffect(()=>{
-        fetchUserList();
+        fetchListsOfproject();
         fetchCardsOfLists();
     }, []);
-
-    // function handleDeleteEvent(id) {
-    //     axios
-    //         .delete("http://localhost:3000/keepTrack/card/"+ id +"/", {
-    //             headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
-    //             params: {withCredentials : true}
-    //         })
-    //         .then((response)=>{
-    //             console.log(response);
-    //             fetchCardsOfLists();
-    //         })
-    //         .catch((err) => {
-    //             console.log("hemlo")
-    //             console.log(err);
-    //         });
-    // };
 
     function callFetchFunction (a) {
         if(a===true){
@@ -149,6 +160,7 @@ const ListCard = () => {
                         <div key={card.id} className='card-cards'>
                             <Card className={(card.is_completed)?'card-green-c':'card-red-c'} >
                             <Card.Content>
+                                <CommentBox type='card' id = {card.id} user={props.user} name={card.card_name} />
                                 <div className='card-header-c'>{card.card_name}</div>
                                 <br></br>
                                 <Card.Description>
@@ -188,7 +200,7 @@ const ListCard = () => {
                                     </div>
                                 </Card.Description>
                                 <br></br>
-                                <EditCard page={1} card = {card} users = {users} project_name={curProject.project_name} list_name={curList.list_name} refreshProjectList = {callFetchFunction}/>
+                                <EditCard page={1} card = {card} lists={lists} users = {users} project_name={curProject.project_name} list_name={curList.list_name} refreshProjectList = {callFetchFunction}/>
                                 {/* <Button className='edit-delete-c' floated='right'basic color='red' onClick={() => handleDeleteEvent(card.id)}>
                                     <Icon name='dont' />Delete
                                 </Button>  */}

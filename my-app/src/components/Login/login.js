@@ -1,8 +1,6 @@
 import React from 'react';
-import {render} from '@testing-library/react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
 import './temp2.css';
 
 class Login extends React.Component{
@@ -37,18 +35,20 @@ class Login extends React.Component{
         // console.log(user1)
         //var csrftoken = getCookie('csrftoken');
         axios
-            .get("http://127.0.0.1:3000/keepTrack/betw", {
-                params: {code:auth, withCredentials : true}
+            .post("http://127.0.0.1:3000/keepTrack/betw", {
+                code:auth, withCredentials : true
             })
-            .then((response)=>{
+            .then((response,abcd)=>{
+                console.log(abcd);
                 console.log(response);
+                this.setState({loggedIn:true});
             })
             .catch((err) => {
                 console.log(err);
             });
         // const user1= await axios({url:'http://127.0.0.1:8000/keepTrack/betw' ,method:'GET', params: {code:auth} , withCredentials:true} ).then(console.log("done"));
         // console.log(user1)
-        await this.setState({loggedIn:true});
+        // await this.setState({loggedIn:true});
     }
 
     render(){

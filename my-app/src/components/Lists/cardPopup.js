@@ -1,11 +1,6 @@
-import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Loader, Modal, Item } from 'semantic-ui-react';
-import axios from "axios";
-import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
-import Popup from 'reactjs-popup';
+import React from 'react';
+import { Button, Modal } from 'semantic-ui-react';
 import Member from '../ProjectPage/member2';
-import EditCard from '../Cards/editcards';
 
 const CardPopup = (props) => {
     const card = props.card

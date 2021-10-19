@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap');
 
 label{
-    color: whitesmoke !important;
+    color: rgb(112, 111, 111) !important;
 }
 
 .container-card{
@@ -29,6 +29,7 @@ label{
     font-size: 1.75em;
     color: whitesmoke;
 }
+
 .addCard{
     width: 10%;
     align-self: center;
@@ -92,10 +93,10 @@ label{
     background: rgba(0, 0, 0, 0.363);
     backdrop-filter: saturate(180%) blur(10px);
     width:50vw;
-    height: 80vh;
+    height: 60vh;
     position: fixed;
     left:25vw;
-    top:10vh;
+    top:20vh;
     display: flex;
     justify-content: space-evenly;
     align-content: space-around;
@@ -117,8 +118,10 @@ label{
 }
 
 .form-popup-c{
-    padding: 5%;
+    padding: 1%;
+    padding-top: 2%;
     color: black;
+    width : 70%;
 }
 
 .button-close-c{

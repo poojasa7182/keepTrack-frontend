@@ -1,15 +1,13 @@
-import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Loader, Modal, Item } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Icon, Modal} from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
-import Popup from 'reactjs-popup';
-import Member from '../ProjectPage/member2';
-import EditCard from '../Cards/editcards';
+import { useHistory } from "react-router-dom";
 
 const DeletePopUp = (props) => {
     const [open, setOpen] = React.useState(false)
     var type = props.type
+    let history = useHistory();
 
     function handleDeleteEvent(id) {
         axios
@@ -21,6 +19,9 @@ const DeletePopUp = (props) => {
                 console.log(response);
                 props.refreshProjectList(true)
                 setOpen(false)
+                if(props.type==='project'){
+                    history.replace("/project")
+                }
             })
             .catch((err) => {
                 setOpen(false)
@@ -37,9 +38,12 @@ const DeletePopUp = (props) => {
                 onClose={() => setOpen(false)}
                 onOpen={() => setOpen(true)}
                 open={open}
-                trigger={<Button className='edit-delete' floated='right'basic color='red' >
+                trigger={(props.page===1)?(<button className="addlist2">
+                                        <Icon name='dont' size='big'/> <br></br>
+                                        Delete
+                                        </button>):(<Button className='edit-delete' floated='right'basic color='red' >
                 <Icon name='dont'/>Delete
-            </Button>}
+            </Button>)}
             >
                 <Modal.Header>Are you sure you want to delete this {props.type}?</Modal.Header>
                 <Button floated='right' color='red' onClick={() => {handleDeleteEvent(props.id);}}>

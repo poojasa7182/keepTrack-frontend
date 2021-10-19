@@ -1,8 +1,6 @@
-import React, {useRef} from 'react';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid, Loader, Modal, Item } from 'semantic-ui-react';
-import axios from "axios";
-import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
+import React from 'react';
+import { Button } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 import Avatar from 'react-avatar';
 
 const Member = (props) => {
@@ -10,9 +8,8 @@ const Member = (props) => {
     
     return(
         <div>
-           
             <Button as={NavLink} to={'/user/'+user.id+'/details/'} size='tiny' className='members-button-color'>
-                <Avatar value={user.name} name={user.name} src='' round={true} size={23}/> &nbsp;
+                <Avatar value={user.name} name={user.name} src='' round={true} size={25}/> &nbsp;
             </Button>
         </div>
     )

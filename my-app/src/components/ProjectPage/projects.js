@@ -1,19 +1,20 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import './temp.css';
-import { Form, Checkbox, Button, TextArea, Card, Icon, Menu, Sidebar, Grid } from 'semantic-ui-react';
+import { Card, Grid, Accordion, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import AddProject from './addProject'
 import EditProject from './editProject'
 import AddList from '../Lists/addList';
 import Member from './member2';
 import DeletePopUp from '../extra/deletePopup';
 
-const Project = () => {
+const Project = (props) => {
     const [projects, setProjects] = React.useState([]);
     const [users, setUsers] = React.useState([]);
-
+    const [activeIndex, setActiveIndex] = React.useState(-1);
+    const curUser = props.curUser
     async function fetchProjectList() {
         axios
             .get('http://localhost:3000/keepTrack/project/', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
@@ -100,6 +101,16 @@ const Project = () => {
         return name
     }
     
+    const handleClickDesc = (e,titleProps) =>{
+        const { index } = titleProps
+        const newIndex = activeIndex === index ? -1 : index
+        setActiveIndex(newIndex);
+    }
+
+    const createMarkup = (content) => {
+        return {__html: content};
+    }
+
     return(
         <div className='container-proj'>
             <div className='header-p'>
@@ -115,19 +126,33 @@ const Project = () => {
                 </div>
             </div>
             <div className="projectBox">
-                <Grid  columns={3} className='projectBox2'>
+                <Grid  columns={2} className='projectBox2'>
                 {projects.map(function(project, index){
                     return(
                         <div key={project.id} className='project-cards'>
-                            <Card className={(project.is_completed)?'card-green':'card-red'} >
+                            <Card className={(project.is_completed)?'card-green-p':'card-red-p'} >
                             <Card.Content>
                                 <AddList page={2} id={project.id} project_name={project.project_name}/>
                                 <div className='card-header'><NavLink to={"/project/"+project.id+"/lists"}>{project.project_name}</NavLink></div>
                                 <br></br>
                                 <div className='card-content-extra'><strong>Created by: </strong>{getCreator(project.creator)}</div>
-                                <Card.Description>
-                                    {project.wiki}
-                                </Card.Description>
+                                <Accordion>
+                                    <Accordion.Title
+                                        active = {activeIndex==project.id}
+                                        index = {project.id}
+                                        onClick={handleClickDesc}
+                                        className='desc-accordion'
+                                    >
+                                         <Icon name='dropdown' />
+                                       <strong>Description:</strong> 
+                                    </Accordion.Title>
+                                    <Accordion.Content active={activeIndex === project.id}>
+                                        <Card.Description className='desc-accordion' dangerouslySetInnerHTML={createMarkup(project.wiki)}>
+                                        {/* {project.wiki} */}
+                                        </Card.Description>
+                                    </Accordion.Content>
+                                </Accordion>
+                                
                             </Card.Content>
                             <Card.Content extra>
                                 <div className='card-content-extra'>
@@ -182,7 +207,7 @@ const Project = () => {
                                     </div>
                                 </Card.Description>
                                 <br></br>
-                                <EditProject Proj = {project} usersAll = {users} projectId = {project.id} refreshProjectList = {emptyTheEdit}/>
+                                <EditProject page={1} Proj = {project} usersAll = {users} projectId = {project.id} refreshProjectList = {emptyTheEdit}/>
                                 {/* <Button className='edit-delete' floated='right'basic color='red' onClick={() => handleDeleteEvent(project.id)}>
                                     <Icon name='dont' />Delete
                                 </Button> */}

@@ -4,6 +4,8 @@
   "private": true,
   "proxy": "http://localhost:8000",
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^30.0.0",
+    "@ckeditor/ckeditor5-react": "^3.0.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -11,8 +13,10 @@
     "dateformat": "^5.0.1",
     "jodit-react": "^1.1.1",
     "js-cookie": "^3.0.1",
+    "moment": "^2.29.1",
     "randomstring": "^1.2.1",
     "react": "^16.14.0",
+    "react-accessible-accordion": "^4.0.0",
     "react-admin-date-inputs": "^1.1.4",
     "react-avatar": "^3.10.0",
     "react-datepicker": "^4.2.1",
@@ -28,7 +32,8 @@
     "semantic-ui-calendar-react": "^0.15.3",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.4",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "websocket": "^1.0.34"
   },
   "scripts": {
     "start": "react-scripts start",

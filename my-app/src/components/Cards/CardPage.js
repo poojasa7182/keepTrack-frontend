@@ -8,11 +8,12 @@ import Cookies from 'js-cookie';
 
 const CardPage = () => {
     let history = useHistory();
-
+    const [user, setUser] = React.useState('');
     async function fetchUserDetails(){
         axios
             .get('http://localhost:3000/keepTrack/user/info', {headers:{ "X-CSRFToken":Cookies.get('keepTrack_csrftoken')}})
             .then((response) => {
+                setUser(response.data)
                 if(response.data.banned){
                     history.push("/");
                 }
@@ -34,7 +35,7 @@ const CardPage = () => {
                 <SidebarMenu />
             </div>
             <div className='cardsContainer'>
-                <ListCard />
+                <ListCard user={user} />
             </div>
         </div>
         <div className='footer'>

@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from "axios";
 import Cookies from 'js-cookie';
-import { Redirect, NavLink } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 
 function Logout(){

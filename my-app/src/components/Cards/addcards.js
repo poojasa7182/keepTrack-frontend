@@ -1,16 +1,10 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import Select from 'react-select'
 import './temp3.css';
-import { Form, Checkbox, Button, TextArea, Menu, Icon } from 'semantic-ui-react';
-import { DateTimeInput } from 'semantic-ui-calendar-react';
+import { Form, Checkbox, Button, TextArea, Modal, Icon } from 'semantic-ui-react';
 import axios from "axios";
-import JoditEditor from "jodit-react";
-import dateFormat from 'dateformat';
-import Datetime from 'react-datetime';
 import Cookies from 'js-cookie';
-import { Redirect } from 'react-router-dom';
 import Popup from 'reactjs-popup';
-import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
@@ -24,6 +18,11 @@ const AddCard = (props) => {
     const [due_date, setDue_date] = React.useState('');
     const [members_c, setMembers_c] = React.useState([]);
     const [description, setDescription] = React.useState("");
+    const [open, setOpen] = React.useState(false);
+    const [messageNo, setNum] = React.useState(-1);
+    var start_date1 = null
+    var due_date1 = null
+
     const handleInfoChange = (e) => {
         const {name,value} = e.target;
         setCardInfo((prevValue)=>({
@@ -38,19 +37,29 @@ const AddCard = (props) => {
     }
 
     const handleSDateChange = (event, data) =>{ 
+        if(data.value===null){
+            setStart_date('')
+            return
+        } 
         var temp = data.value.toISOString()
         console.log(data.value)
         var isoDateTime = new Date(temp)
         var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
         var toSet = localDateTime.slice(6,10) + '-' + localDateTime.slice(3,5)+ '-' + localDateTime.slice(0,2);
         setStart_date(toSet);
+        start_date1 = new Date(start_date)
     }
     const handleDDateChange = (event, data) =>{ 
+        if(data.value===null){
+            setDue_date('')
+            return
+        }
         var temp = data.value.toISOString()
         var isoDateTime = new Date(temp)
         var localDateTime = isoDateTime.toLocaleDateString() + " " + isoDateTime.toLocaleTimeString();
         var toSet = localDateTime.slice(6,10) + '-' + localDateTime.slice(3,5)+ '-' + localDateTime.slice(0,2);
         setDue_date(toSet);
+        due_date1 = new Date(due_date)
     }
 
     var handleMembersChange = (e) => {
@@ -67,6 +76,13 @@ const AddCard = (props) => {
     }))
 
     const handleFormSubmit = () => {
+        if(cardInfo.card_name===''||start_date===''||due_date===''||description===''){
+            // alert('Please fill all the fields!')
+            setNum(1);
+            setOpen(true)
+            return;
+        }
+
         const data = {
             card_name : cardInfo.card_name,
             start_date : start_date,
@@ -77,15 +93,14 @@ const AddCard = (props) => {
             project_c : props.projectId,
             list_c : props.listId
         };
-        setCardInfo((prevValue)=>({
-            ...prevValue,
-            card_name:'',
-        }));
-        setStart_date('')
-        setDue_date('')
-        setDescription('')
-        setis_completed(false)
-        setMembers_c([])
+        var date1 = new Date(start_date)
+        var date2 = new Date(due_date)
+
+        if(date1-date2>0){
+            setNum(2)
+            setOpen(true)
+            return
+        }
         
         axios
             .post("http://localhost:3000/keepTrack/card/",data, {
@@ -95,8 +110,21 @@ const AddCard = (props) => {
             .then((response)=>{
                 console.log(response);
                 props.refreshProjectList(true);
+                setCardInfo((prevValue)=>({
+                    ...prevValue,
+                    card_name:'',
+                }));
+                setStart_date('')
+                setDue_date('')
+                setDescription('')
+                setis_completed(false)
+                setMembers_c([])
+                start_date1 = null;
+                due_date1 = null;
             })
             .catch((err) => {
+                setNum(3);
+                setOpen(true)
                 console.log("hemlo")
                 console.log(err);
             });
@@ -121,6 +149,22 @@ const AddCard = (props) => {
         >
             {close => (
             <div className="addCardPopUp"> 
+                <Modal
+                     onClose={() => setOpen(false)}
+                     onOpen={() => setOpen(true)}
+                     open={open}
+                >
+                    <Modal.Content>
+                        {
+                            (messageNo===2)?('Due date cannot be smaller than start date of project!')
+                            :((messageNo===1)?('Please fill all the fields'):('Please enter a unique card name'))
+                        }
+                        
+                    </Modal.Content>
+                    <Button color='black' onClick={() => setOpen(false)}>
+                        Ok
+                    </Button>
+                </Modal>
                 <Form className='form-popup-c'>
                     <Form.Input 
                         placeholder='Card title' 
@@ -128,10 +172,10 @@ const AddCard = (props) => {
                         name='card_name'
                         value={cardInfo.card_name}
                         onChange={handleInfoChange} />
-
-                    <Form.Group widths='equal'>
-                        <SemanticDatepicker label='Start-date' onChange={handleSDateChange} />
-                        <SemanticDatepicker label='Due-date' onChange={handleDDateChange} />
+ 
+                    <Form.Group widths={2}>
+                        <SemanticDatepicker value={start_date1} label='Start-date' onChange={handleSDateChange} />
+                        <SemanticDatepicker value={due_date1} label='Due-date' onChange={handleDDateChange} />
                     </Form.Group>
 
                     <TextArea 
@@ -157,7 +201,7 @@ const AddCard = (props) => {
                         onChange={handleMembersChange}
                     ></Select>
                     <br></br>
-                    <Form.Input 
+                    {/* <Form.Input 
                         placeholder='Project Name' 
                         width={16}
                         name='project_name'
@@ -168,14 +212,14 @@ const AddCard = (props) => {
                         width={16}
                         name='list_name'
                         value={props.list_name}
-                    />
+                    /> */}
                     <div className='flex-div'>
                     <Button 
                         color='teal'
                         type='button'
                         onClick={() => {
                         handleFormSubmit()
-                        close();
+                        // close();
                         }}>Add Card</Button>
                     </div>
                 </Form>
