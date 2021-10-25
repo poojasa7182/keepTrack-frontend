@@ -24,6 +24,7 @@
 
 .comment-content{
     margin-left: 2%;
+    width: 100%;
 }
 
 .time-comment{
@@ -36,3 +37,22 @@
     margin-right: 2% !important;
     margin-bottom: 1% !important;
 }
+
+.flex-div-2-comment{
+    display: flex;
+    width: 100% !important;
+}
+
+.flex-div-2-comment-2{
+    display: flex;
+    width: 94% !important;
+}
+
+.card-popup-modal-comments-delete{
+    width: 30vw !important;
+}
+/* .icon-comment-del{
+    border: black solid 2px;
+    /* display: flex; */
+    /* float: right; */
+/* } */ 

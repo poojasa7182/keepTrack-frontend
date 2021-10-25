@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Grid, Accordion, Popup, Modal, Comment, Button, Form, Loader } from 'semantic-ui-react';
+import { Card, Grid, Accordion, Popup, Modal, Comment, Button, Form, Loader, Icon } from 'semantic-ui-react';
 import axios from "axios";
 import Cookies from 'js-cookie';
 import './temp6.css'
@@ -15,9 +15,8 @@ const CommentBox = (props) => {
     const [curComment, setCurComment] = React.useState('');
     const [socket, setSocket] = React.useState('');
     const [open, setOpen] = React.useState(false);
-    var data = 'abc';
-
-    
+    const [openDelete, setOpenDelete] = React.useState(-1);
+    const [deleteCommentContent,setDeleteComment] = React.useState('');
     const establishConnection = () => {
         const chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/comments/'+type+'_'+id + '/');
         setSocket(chatSocket)
@@ -54,10 +53,31 @@ const CommentBox = (props) => {
     if(open===true){
         socket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            var extra = prevComments;
-            extra.push(data['message']);
-            setPrevComments([...extra])
-            setScroll_Bottom()
+            if(data['info']==='comment'){
+                var extra = prevComments;
+                extra.push(data['message']);
+                setPrevComments([...extra]);
+                setScroll_Bottom();
+            }
+            if(data['info']==='delete'){
+                for(let i = 0 ; i < prevComments.length ; i++){
+                    if(prevComments[i].id===data['comment']['id']){
+                        prevComments.splice(i, 1);
+                        var extra = prevComments;
+                        setPrevComments([...extra]);
+                    }
+                }
+            }
+            if(data['info']==='edit'){
+                for(let i = 0 ; i < prevComments.length ; i++){
+                    if(prevComments[i].id===data['comment']['id']){
+                        prevComments.splice(i, 1);
+                        var extra = prevComments;
+                        extra.push(data['message']);
+                        setPrevComments([...extra]);
+                    }
+                }
+            }
         };
     }
 
@@ -78,6 +98,37 @@ const CommentBox = (props) => {
         setCurComment('')
     }
 
+    const deleteComment = (id) =>{
+        axios
+            .delete("http://localhost:3000/keepTrack/comments_c/"+ id +"/", {
+                headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+                params: {withCredentials : true}
+            })
+            .then((response)=>{
+                console.log(response);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    // const editComment = (id) =>{
+    //     data = {
+    //         comment_content = curComment
+    //     }
+    //     axios
+    //         .patch("http://localhost:3000/keepTrack/comments_c/"+ id +"/",data, {
+    //             headers: { 'Content-Type': 'application/json', "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+    //             params: {withCredentials : true}
+    //         })
+    //         .then((response)=>{
+    //             console.log(response);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }
+
     return(
         <Modal
                 className='card-popup-modal-comments'
@@ -87,6 +138,20 @@ const CommentBox = (props) => {
                 trigger={<Button icon='comments' floated='right' color='blue' size='large' ></Button>}
         >
         <Modal.Header>Card_{name}</Modal.Header>
+            <Modal 
+                className='card-popup-modal-comments-delete'
+                open = {openDelete>-1}
+            >
+               <Modal.Content>Are you sure you want to delete this comment?<br></br>
+                "{deleteCommentContent}"
+               </Modal.Content>
+                <Button floated='right' color='red' onClick={() => {deleteComment(openDelete);setOpenDelete(-1);setDeleteComment('')}}>
+                    Delete
+                </Button>
+                <Button floated='left' color='teal' onClick={() => {setOpenDelete(-1);setDeleteComment('')}}>
+                    Cancel
+                </Button> 
+            </Modal>
         <Modal.Content className='comment-box-comments' id='comment-box-comments'>
             {   
                 (prevComments==='')?(<Loader/>):(
@@ -97,13 +162,17 @@ const CommentBox = (props) => {
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         {/* <Comment.Avatar size='small' as='a' src={comment.sender.profilePic} /> */}
                         <Comment.Content className='comment-content'>
-                            <div className='flex-div-2'>
+                            <div className='flex-div-2-comment'>
+                                <div className='flex-div-2-comment-2'>
                                 <Comment.Author as='a'>{comment.sender.name}</Comment.Author>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <Comment.Metadata className='time-comment'>{moment(comment.time).fromNow()}</Comment.Metadata>
+                                </div>
+                                {(comment.sender.id===user.id)?(<div className='icon-comment-del'><Icon name='trash alternate' onClick={()=>{setOpenDelete(comment.id);setDeleteComment(comment.comment_content)}} color='red' floated='right'></Icon></div>):('')}
                             </div>
                             <Comment.Text>{comment.comment_content}</Comment.Text>
                         </Comment.Content>
+                        
                         </Comment>
                 )}))
             }
