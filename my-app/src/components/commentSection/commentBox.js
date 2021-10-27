@@ -17,6 +17,18 @@ const CommentBox = (props) => {
     const [open, setOpen] = React.useState(false);
     const [openDelete, setOpenDelete] = React.useState(-1);
     const [deleteCommentContent,setDeleteComment] = React.useState('');
+    const [editComment,setEditComment] = React.useState('');
+    const [editOpen, setEditOpen] = React.useState(false);
+    const [editId, setEditId] = React.useState(-1);
+    
+    const setCurComment1 = (v) =>{
+        setCurComment(v);
+        if(v===''&&editComment!=''){
+            setEditComment('');
+            setEditId(-1);
+        }
+    }
+    
     const establishConnection = () => {
         const chatSocket = new WebSocket('ws://127.0.0.1:8000/ws/comments/'+type+'_'+id + '/');
         setSocket(chatSocket)
@@ -24,8 +36,6 @@ const CommentBox = (props) => {
             console.log("Websocket Connection established");
         };
         fetchPrevComments()
-        
-        
     }
 
     function fetchPrevComments() {
@@ -73,7 +83,8 @@ const CommentBox = (props) => {
                     if(prevComments[i].id===data['comment']['id']){
                         prevComments.splice(i, 1);
                         var extra = prevComments;
-                        extra.push(data['message']);
+                        extra.push(data['comment']);
+                        console.log(data['comment'])
                         setPrevComments([...extra]);
                     }
                 }
@@ -85,7 +96,10 @@ const CommentBox = (props) => {
         if(curComment===''){
             return;
         }
-       
+        if(editComment!=''){
+            setEditOpen(true);
+            return;
+        }
         const data = {
             message : {
                 comment_content : curComment,
@@ -98,7 +112,32 @@ const CommentBox = (props) => {
         setCurComment('')
     }
 
+    const editCommentAction = () =>{
+        const data = {
+            comment_content : curComment,
+            time : new Date(),
+        }
+        axios
+            .patch("http://localhost:3000/keepTrack/comments_c/"+editId+"/",data, {
+                headers: { 'Content-Type': 'application/json', "X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
+                params: {withCredentials : true}
+            })
+            .then((response)=>{
+                // console.log(response);
+                setEditId(-1);
+                setCurComment('');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
     const deleteComment = (id) =>{
+        if(editId===id){
+            setEditId(-1);
+            setEditComment('')
+            setCurComment('')
+        }
         axios
             .delete("http://localhost:3000/keepTrack/comments_c/"+ id +"/", {
                 headers: {"X-CSRFToken":Cookies.get('keepTrack_csrftoken') },
@@ -140,6 +179,20 @@ const CommentBox = (props) => {
         <Modal.Header>Card_{name}</Modal.Header>
             <Modal 
                 className='card-popup-modal-comments-delete'
+                open = {editOpen}
+            >
+               <Modal.Content>Are you sure you want to edit the comment<br></br>
+                "{editComment}" <br></br> to <br></br> "{curComment}"
+               </Modal.Content>
+                <Button floated='right' color='red' onClick={() => {editCommentAction();setEditOpen(false);setEditComment('')}}>
+                    Edit
+                </Button>
+                <Button floated='left' color='teal' onClick={() => {setEditOpen(false);setEditComment('');setEditId(-1);setCurComment('')}}>
+                    Cancel
+                </Button> 
+            </Modal>
+            <Modal 
+                className='card-popup-modal-comments-delete'
                 open = {openDelete>-1}
             >
                <Modal.Content>Are you sure you want to delete this comment?<br></br>
@@ -168,8 +221,9 @@ const CommentBox = (props) => {
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <Comment.Metadata className='time-comment'>{moment(comment.time).fromNow()}</Comment.Metadata>
                                 </div>
+                                {(comment.sender.id===user.id)?(<div className='icon-comment-del'><Icon name='pencil alternate' onClick={()=>{setCurComment(comment.comment_content);setEditComment(comment.comment_content);setEditId(comment.id)}} color='yellow' floated='right'></Icon></div>):('')}
                                 {(comment.sender.id===user.id)?(<div className='icon-comment-del'><Icon name='trash alternate' onClick={()=>{setOpenDelete(comment.id);setDeleteComment(comment.comment_content)}} color='red' floated='right'></Icon></div>):('')}
-                            </div>
+                                </div>
                             <Comment.Text>{comment.comment_content}</Comment.Text>
                         </Comment.Content>
                         
@@ -187,7 +241,7 @@ const CommentBox = (props) => {
         <Form reply>
             <Form.TextArea 
                 value = {curComment}
-                onChange={ (e) => setCurComment(e.target.value)}
+                onChange={ (e) => {setCurComment1(e.target.value);}}
             />
                 <Button content='Add Comment' size='small' id='button-comment-send' onClick={sendComment} labelPosition='left' icon='edit' primary />
             </Form>
