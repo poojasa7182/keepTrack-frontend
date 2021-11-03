@@ -8,8 +8,8 @@ function Home(){
     var str = randomstring.generate()
     let auth_params={
         "CLIENT_ID":"89PqwZn7DY9PlIUdhA7tY51A0osTECkDMcYQ8ys5",
-        //"REDIRECT_URI":"http://localhost:3000/login",
-        "REDIRECT_URI":"http://localhost:8000/keepTrack/betw",
+        "REDIRECT_URI":"http://localhost:3000/login",
+        // "REDIRECT_URI":"http://localhost:8000/keepTrack/betw",
         "STATE_STRING":str
     }
     const handleButtonClick = (e) => {

@@ -35,8 +35,8 @@ class Login extends React.Component{
         // console.log(user1)
         //var csrftoken = getCookie('csrftoken');
         axios
-            .post("http://127.0.0.1:3000/keepTrack/betw", {
-                code:auth, withCredentials : true
+            .get("http://localhost:3000/keepTrack/betw", {
+                params: {code:auth},code:auth, withCredentials : true
             })
             .then((response,abcd)=>{
                 console.log(abcd);

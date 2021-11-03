@@ -41,7 +41,7 @@ const DeletePopUp = (props) => {
                 trigger={(props.page===1)?(<button className="addlist2">
                                         <Icon name='dont' size='big'/> <br></br>
                                         Delete
-                                        </button>):(<Button className='edit-delete' floated='right'basic color='red' >
+                                        </button>):(<Button className='edit-delete' floated='right' basic color='red' >
                 <Icon name='dont'/>Delete
             </Button>)}
             >

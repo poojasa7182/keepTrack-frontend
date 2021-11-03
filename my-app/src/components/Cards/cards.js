@@ -163,7 +163,7 @@ const ListCard = (props) => {
                                 <CommentBox type='card' id = {card.id} user={props.user} name={card.card_name} />
                                 <div className='card-header-c'>{card.card_name}</div>
                                 <br></br>
-                                <Card.Description>
+                                <Card.Description className='card-content-extra-c'>
                                     {card.description}
                                 </Card.Description>
                             </Card.Content>

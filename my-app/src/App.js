@@ -10,6 +10,7 @@ import CardPage from './components/Cards/CardPage';
 import UsersPage from './components/UsersPage/UsersPage';
 import UsersPageO from './components/UsersPage/UsersPageO';
 import Logout from './components/SideBar/logout';
+import Home2 from './components/Login/login2';
 
 function App() {
   return (
@@ -41,6 +42,9 @@ function App() {
       <Route exact path="/user/:userId/details">
         <UsersPageO/>
       </Route>
+      {/* <Route exact path="/login2">
+        <Home2/>
+      </Route> */}
     </div>
   );
 }
